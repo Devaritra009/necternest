@@ -1,27 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 350" width="300" height="350">
   <defs>
-    <linearGradient id="qrNeonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#F59E0B" />
-      <stop offset="100%" stop-color="#FF5E1E" />
+    <linearGradient id="qrGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F0FF" />
+      <stop offset="100%" stop-color="#F59E0B" />
     </linearGradient>
   </defs>
-  <rect x="2" y="2" width="296" height="346" rx="18" fill="#131B2B" stroke="rgba(245, 158, 11, 0.3)" stroke-width="2"/>
+  <rect x="2" y="2" width="296" height="346" rx="18" fill="#0E1626" stroke="rgba(0, 240, 255, 0.3)" stroke-width="2"/>
+  
   <!-- Top Bar -->
-  <path d="M2 18 C2 9.16 9.16 2 18 2 L282 2 C290.84 2 298 9.16 298 18 L298 52 L2 52 Z" fill="#1E293B"/>
-  <text x="150" y="32" font-family="'Outfit', sans-serif" font-size="13" font-weight="800" fill="#F59E0B" text-anchor="middle" letter-spacing="1">⚡ BHIM UPI / GPAY / PHONEPE</text>
+  <path d="M2 18 C2 9.16 9.16 2 18 2 L282 2 C290.84 2 298 9.16 298 18 L298 52 L2 52 Z" fill="#162238"/>
+  <text x="150" y="32" font-family="'Outfit', sans-serif" font-size="13" font-weight="900" fill="#00F0FF" text-anchor="middle" letter-spacing="1">⚡ BHIM UPI / GPAY / PHONEPE</text>
   
-  <!-- QR Box outline (Dark Glass) -->
-  <rect x="28" y="70" width="244" height="204" rx="12" fill="#0B0F17" stroke="rgba(255, 255, 255, 0.1)" stroke-width="1.5"/>
+  <!-- QR Box outline -->
+  <rect x="28" y="70" width="244" height="204" rx="12" fill="#070B13" stroke="rgba(255, 255, 255, 0.12)" stroke-width="1.5"/>
   
-  <!-- Stylized QR Matrix Pattern in Neon/White -->
+  <!-- Stylized QR Matrix Pattern in Ice Cyan & Clean White -->
   <rect x="52" y="94" width="46" height="46" fill="none" stroke="#F8FAFC" stroke-width="6" rx="6"/>
-  <rect x="64" y="106" width="22" height="22" fill="#F59E0B" rx="3"/>
+  <rect x="64" y="106" width="22" height="22" fill="#00F0FF" rx="3"/>
   
   <rect x="202" y="94" width="46" height="46" fill="none" stroke="#F8FAFC" stroke-width="6" rx="6"/>
-  <rect x="214" y="106" width="22" height="22" fill="#F59E0B" rx="3"/>
+  <rect x="214" y="106" width="22" height="22" fill="#00F0FF" rx="3"/>
   
   <rect x="52" y="196" width="46" height="46" fill="none" stroke="#F8FAFC" stroke-width="6" rx="6"/>
-  <rect x="64" y="208" width="22" height="22" fill="#F59E0B" rx="3"/>
+  <rect x="64" y="208" width="22" height="22" fill="#00F0FF" rx="3"/>
 
   <!-- Matrix Modules -->
   <g fill="#94A3B8">
@@ -32,9 +33,9 @@
     <rect x="152" y="122" width="20" height="20" rx="3"/>
     <rect x="180" y="124" width="12" height="26" rx="3"/>
     
-    <rect x="112" y="152" width="18" height="18" rx="3" fill="#FF5E1E"/>
-    <rect x="138" y="148" width="28" height="26" rx="5" fill="#F59E0B"/>
-    <rect x="174" y="154" width="16" height="14" rx="3" fill="#FF5E1E"/>
+    <rect x="112" y="152" width="18" height="18" rx="3" fill="#F59E0B"/>
+    <rect x="138" y="148" width="28" height="26" rx="5" fill="#00F0FF"/>
+    <rect x="174" y="154" width="16" height="14" rx="3" fill="#F59E0B"/>
     
     <rect x="112" y="184" width="26" height="14" rx="3"/>
     <rect x="146" y="182" width="16" height="24" rx="3"/>
@@ -49,6 +50,6 @@
     <rect x="216" y="220" width="28" height="14" rx="3"/>
   </g>
   
-  <text x="150" y="298" font-family="'Space Grotesk', monospace" font-size="14" font-weight="800" fill="#F59E0B" text-anchor="middle">necternest@upi</text>
+  <text x="150" y="298" font-family="'Outfit', monospace" font-size="14" font-weight="900" fill="#00F0FF" text-anchor="middle">necternest@upi</text>
   <text x="150" y="322" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="600" fill="#94A3B8" text-anchor="middle">Instant 0-fee payment via any UPI App</text>
 </svg>

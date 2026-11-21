@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
+  <!-- Pre-render Theme Application to Prevent Flash -->
+  <script>
+    (function() {
+      const t = localStorage.getItem("necternest_theme_mode") || "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+  
   <title>The Brand — NecterNest Cloud Comfort Streetwear India</title>
   <meta name="title" content="The Brand — NecterNest Cloud Comfort Streetwear India">
   <meta name="description" content="Discover how NecterNest was created to bring cloud-soft, 100% waterproof EVA clogs to Indian feet at honest prices under ₹1,000.">
@@ -51,6 +59,12 @@
       </nav>
 
       <div class="header-actions">
+        <!-- Dark & White Mode Toggle Button -->
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle dark and white mode" title="Switch theme mode">
+          <span class="moon-icon">🌙 Dark</span>
+          <span class="sun-icon">☀️ Light</span>
+        </button>
+
         <a href="cart.html" class="cart-icon-btn" aria-label="View Shopping Bag">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>

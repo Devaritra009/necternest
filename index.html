@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
+  <!-- Pre-render Theme Application to Prevent Flash -->
+  <script>
+    (function() {
+      const t = localStorage.getItem("necternest_theme_mode") || "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+
   <!-- Primary SEO Meta Tags -->
   <title>NecterNest — Street Aesthetic &amp; Cloud Comfort Clogs for 18+ India</title>
   <meta name="title" content="NecterNest — Street Aesthetic &amp; Cloud Comfort Clogs for 18+ India">
@@ -62,6 +70,12 @@
 
       <!-- Action Buttons -->
       <div class="header-actions">
+        <!-- Dark & White Mode Toggle Button -->
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle dark and white mode" title="Switch theme mode">
+          <span class="moon-icon">🌙 Dark</span>
+          <span class="sun-icon">☀️ Light</span>
+        </button>
+
         <!-- Cart Icon Button with Count Badge -->
         <a href="cart.html" class="cart-icon-btn" aria-label="View Shopping Bag">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -130,7 +144,7 @@
       <div class="container category-pills-row">
         <a href="shop.html" class="filter-chip active">🔥 All Drops (12)</a>
         <a href="shop.html?cat=Men" class="filter-chip">👟 Men's Streetwear</a>
-        <a href="shop.html?cat=Women" class="filter-chip">🌸 Women's Pastel &amp; Platforms</a>
+        <a href="shop.html?cat=Women" class="filter-chip">🌸 Women's Platforms</a>
         <a href="shop.html?cat=Unisex" class="filter-chip">⚡ Unisex Staples</a>
         <a href="shop.html?sort=price-low" class="filter-chip">🏷️ Steal Deals Under ₹850</a>
       </div>
@@ -242,10 +256,10 @@
 
     <!-- Promotional Launch Offer Banner -->
     <section class="container mt-4 mb-5">
-      <div style="background: linear-gradient(135deg, #131B2B, #1E293B); color: #FFFFFF; border-radius: var(--radius-xl); padding: 3.5rem 2rem; text-align: center; border: 1.5px solid rgba(245, 158, 11, 0.4); box-shadow: 0 0 30px rgba(245, 158, 11, 0.15);">
-        <span style="background: linear-gradient(135deg, var(--accent), var(--primary)); color: #090D16; font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 900; padding: 0.4rem 1rem; border-radius: var(--radius-full);">LIMITED LAUNCH DROP</span>
-        <h2 style="color: #F8FAFC; font-size: 2.5rem; margin-top: 1.25rem;">FLAT ₹100 OFF YOUR FIRST PAIR</h2>
-        <p style="color: #94A3B8; max-width: 540px; margin: 0.85rem auto 1.75rem; font-size: 1.1rem;">
+      <div style="background: var(--bg-surface); color: var(--text-main); border-radius: var(--radius-xl); padding: 3.5rem 2rem; text-align: center; border: 1.5px solid var(--border-color); box-shadow: var(--shadow-md);">
+        <span style="background: var(--grad-primary); color: #080C15; font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 900; padding: 0.4rem 1rem; border-radius: var(--radius-full);">LIMITED LAUNCH DROP</span>
+        <h2 style="font-size: 2.5rem; margin-top: 1.25rem;">FLAT ₹100 OFF YOUR FIRST PAIR</h2>
+        <p style="color: var(--text-muted); max-width: 540px; margin: 0.85rem auto 1.75rem; font-size: 1.1rem;">
           Enter code <strong style="color: var(--primary); font-family: monospace; font-size: 1.3rem;">FIRSTNEST</strong> at checkout. Plus FREE express delivery across India!
         </p>
         <a href="shop.html" class="btn btn-primary btn-lg">Claim Your ₹100 Off &rarr;</a>

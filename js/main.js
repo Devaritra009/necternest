@@ -1,16 +1,57 @@
 /**
  * NecterNest - Main JavaScript File
- * Theme: Modern Multi-Color Streetwear Dark Mode
+ * Theme: Modern Streetwear with Dark & White Mode Toggle
  * Handles:
- * 1. Cart management with localStorage persistence
- * 2. Mobile hamburger menu toggle
- * 3. Dynamic Product Details Page (product.html?id=...)
- * 4. Shop filters, sorting, and search (shop.html)
- * 5. Cart calculations, coupons, and WhatsApp Checkout (cart.html)
- * 6. Interactive Size Chart Modal
- * 7. Toast notification popups
- * 8. Interactive Color Swatch Preview
+ * 1. Dark & White Mode state with localStorage persistence
+ * 2. Cart management with localStorage persistence
+ * 3. Mobile hamburger menu toggle
+ * 4. Dynamic Product Details Page (product.html?id=...)
+ * 5. Shop filters, sorting, and search (shop.html)
+ * 6. Cart calculations, coupons, and WhatsApp Checkout (cart.html)
+ * 7. Interactive Size Chart Modal
+ * 8. Toast notification popups
  */
+
+// ==========================================
+// 0. THEME MANAGEMENT (DARK & WHITE MODE)
+// ==========================================
+const THEME_STORAGE_KEY = "necternest_theme_mode";
+
+function getStoredTheme() {
+  return localStorage.getItem(THEME_STORAGE_KEY) || "dark";
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem(THEME_STORAGE_KEY, theme);
+  updateThemeToggleButtons(theme);
+}
+
+function toggleTheme() {
+  const current = getStoredTheme();
+  const next = current === "dark" ? "light" : "dark";
+  applyTheme(next);
+  showToast(`Switched to ${next === "dark" ? "🌙 Dark" : "☀️ White"} Mode`, "info");
+}
+
+function updateThemeToggleButtons(theme) {
+  const btns = document.querySelectorAll(".theme-toggle-btn");
+  btns.forEach(btn => {
+    if (theme === "light") {
+      btn.setAttribute("title", "Switch to Dark Mode");
+      btn.classList.add("is-light");
+    } else {
+      btn.setAttribute("title", "Switch to White Mode");
+      btn.classList.remove("is-light");
+    }
+  });
+}
+
+// Immediate application to prevent theme flash
+(function() {
+  const theme = getStoredTheme();
+  document.documentElement.setAttribute("data-theme", theme);
+})();
 
 // ==========================================
 // STORE CONFIGURATION
@@ -248,13 +289,13 @@ function setupSizeModal() {
         <div class="modal-header">
           <div class="modal-title-group">
             <span class="modal-icon">📏</span>
-            <h3 id="sizeModalTitle">NecterNest Street Sizing Guide</h3>
+            <h3 id="sizeModalTitle">NecterNest Sizing Guide</h3>
           </div>
           <button type="button" class="modal-close-btn" aria-label="Close size guide">&times;</button>
         </div>
         <div class="modal-body">
           <p class="size-guide-tip">
-            <strong>Pro Fit Tip:</strong> NecterNest clogs fit true to standard Indian / UK shoe sizes. If you wear a half size (e.g. UK 7.5), size up to UK 8 for that relaxed streetwear room.
+            <strong>Pro Fit Tip:</strong> NecterNest clogs fit true to standard Indian / UK shoe sizes. If you wear a half size (e.g. UK 7.5), size up to UK 8 for relaxed, comfortable room.
           </p>
           <div class="table-responsive">
             <table class="size-table">
@@ -362,18 +403,10 @@ function openSizeModal() {
 }
 
 // ==========================================
-// 6. MULTI-COLOR PRODUCT CARD BUILDER
+// 6. PRODUCT CARD BUILDER
 // ==========================================
 function createProductCardHTML(product) {
   const discountPercent = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
-
-  // Suggested complementary color dots for dynamic swatch styling
-  const swatches = [
-    { name: "Honey Amber", hex: "#F59E0B", img: "images/clog-honey-amber.svg" },
-    { name: "Mint Breeze", hex: "#10B981", img: "images/clog-pastel-mint.svg" },
-    { name: "Cotton Candy", hex: "#EC4899", img: "images/clog-cotton-candy.svg" },
-    { name: "Carbon Black", hex: "#334155", img: "images/clog-carbon-black.svg" }
-  ];
 
   return `
     <article class="product-card" data-category="${product.category}" data-id="${product.id}">
@@ -388,11 +421,11 @@ function createProductCardHTML(product) {
       <div class="product-card-info">
         <div class="product-card-meta-row">
           <span class="product-card-category">${product.category} DROP</span>
-          <!-- Dynamic Color Swatches -->
+          <!-- Dynamic Color Dots Preview -->
           <div class="card-color-swatches" title="Available in 12 Colorways">
-            <span class="swatch-dot active" style="background-color: ${product.colorHex}; box-shadow: 0 0 6px ${product.colorHex};"></span>
+            <span class="swatch-dot active" style="background-color: ${product.colorHex};"></span>
             <span class="swatch-dot" style="background-color: #00F0FF;"></span>
-            <span class="swatch-dot" style="background-color: #8B5CF6;"></span>
+            <span class="swatch-dot" style="background-color: #F59E0B;"></span>
             <span class="swatch-more">+9</span>
           </div>
         </div>
@@ -582,8 +615,8 @@ function initProductPage() {
           <button class="thumb-btn" onclick="updateMainImage('images/clog-pastel-mint.svg', this)">
             <img src="images/clog-pastel-mint.svg" alt="Mint Angle">
           </button>
-          <button class="thumb-btn" onclick="updateMainImage('images/clog-lavender-dream.svg', this)">
-            <img src="images/clog-lavender-dream.svg" alt="Lavender Angle">
+          <button class="thumb-btn" onclick="updateMainImage('images/clog-midnight-slate.svg', this)">
+            <img src="images/clog-midnight-slate.svg" alt="Slate Angle">
           </button>
         </div>
       </div>
@@ -616,18 +649,18 @@ function initProductPage() {
         <div class="pdp-offer-alert">
           <span class="offer-icon">🎁</span>
           <div class="offer-text">
-            <strong>Launch Drop Special:</strong> Apply promo code <span class="coupon-highlight">${STORE_CONFIG.couponCode}</span> at checkout for an extra <strong>₹${STORE_CONFIG.couponDiscount} OFF</strong>!
+            <strong>Launch Special Offer:</strong> Apply code <span class="coupon-highlight">${STORE_CONFIG.couponCode}</span> at checkout for an extra <strong>₹${STORE_CONFIG.couponDiscount} OFF</strong>!
           </div>
         </div>
 
-        <!-- Colorway Swatches Preview -->
+        <!-- Colorway Preview -->
         <div class="pdp-colorway-section" style="margin-bottom: 1.5rem;">
-          <label style="display: block; font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem;">
+          <label style="display: block; font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 800; margin-bottom: 0.5rem;">
             Colorway: <strong style="color: var(--primary);">${product.colorName}</strong>
           </label>
           <div style="display: flex; gap: 0.65rem; align-items: center;">
-            <span style="width: 28px; height: 28px; border-radius: 50%; background-color: ${product.colorHex}; border: 2px solid #FFF; box-shadow: 0 0 10px ${product.colorHex};"></span>
-            <span style="font-size: 0.85rem; color: var(--text-muted);">Explore 11 other colorways in <a href="shop.html" style="color: var(--primary); text-decoration: underline;">Shop Drops</a></span>
+            <span style="width: 26px; height: 26px; border-radius: 50%; background-color: ${product.colorHex}; border: 2px solid var(--text-main); box-shadow: 0 0 10px ${product.colorHex};"></span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Explore 11 other colorways in <a href="shop.html" style="color: var(--neon-cyan); text-decoration: underline;">Shop Drops</a></span>
           </div>
         </div>
 
@@ -695,7 +728,7 @@ function initProductPage() {
             <span class="icon">⚡</span>
             <div class="text">
               <strong>Fast Dispatch</strong>
-              <small>Ships in 24 hours</small>
+              <small>Ships within 24h</small>
             </div>
           </div>
         </div>
@@ -847,7 +880,7 @@ function initCartPage() {
         <div class="empty-cart-view">
           <div class="empty-cart-icon">🛒</div>
           <h2>Your Shopping Bag is Empty</h2>
-          <p>Treat your feet to cloud comfort! Explore our vibrant street collection of 12 comfortable clog styles.</p>
+          <p>Treat your feet to cloud comfort! Explore our street collection of 12 comfortable clog styles.</p>
           <a href="shop.html" class="btn btn-primary btn-lg mt-3">Explore All Drops</a>
         </div>
       `;
@@ -1122,11 +1155,31 @@ Please confirm my order and share dispatch timeline! Thanks squad!`;
 // 11. GLOBAL INITIALIZATION
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
+  // Setup theme toggle buttons
+  setupThemeToggles();
+
+  // Setup global mobile menu
   setupMobileMenu();
+
+  // Setup size modal
   setupSizeModal();
+
+  // Update cart badge
   updateCartBadge();
+
+  // Floating WhatsApp button setup
   setupFloatingWhatsApp();
 });
+
+function setupThemeToggles() {
+  const currentTheme = getStoredTheme();
+  updateThemeToggleButtons(currentTheme);
+
+  const toggleButtons = document.querySelectorAll(".theme-toggle-btn");
+  toggleButtons.forEach(btn => {
+    btn.addEventListener("click", toggleTheme);
+  });
+}
 
 function setupFloatingWhatsApp() {
   if (document.querySelector(".whatsapp-float")) return;

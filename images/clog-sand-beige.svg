@@ -1,65 +1,46 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
   <defs>
-    <!-- Deep Obsidian Studio Gradient with Multi-Color Aura -->
+    <!-- Deep Obsidian Studio Mesh Gradient -->
     <radialGradient id="studioDark" cx="50%" cy="40%" r="70%">
-      <stop offset="0%" stop-color="#192237" />
-      <stop offset="50%" stop-color="#101726" />
-      <stop offset="100%" stop-color="#080C14" />
+      <stop offset="0%" stop-color="#151E32" />
+      <stop offset="55%" stop-color="#0E1626" />
+      <stop offset="100%" stop-color="#070B13" />
     </radialGradient>
     
-    <!-- Neon Underglow Spotlight -->
+    <!-- Cool Spotlight Halo -->
     <radialGradient id="neonHalo" cx="50%" cy="58%" r="48%">
-      <stop offset="0%" stop-color="#D97706" stop-opacity="0.45"/>
-      <stop offset="45%" stop-color="#F59E0B" stop-opacity="0.2"/>
-      <stop offset="100%" stop-color="#080C14" stop-opacity="0"/>
+      <stop offset="0%" stop-color="#D97706" stop-opacity="0.4"/>
+      <stop offset="55%" stop-color="#D97706" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#070B13" stop-opacity="0"/>
     </radialGradient>
 
     <!-- Upper Shoe Foam Gradient -->
     <linearGradient id="clogBody" x1="0%" y1="10%" x2="100%" y2="90%">
       <stop offset="0%" stop-color="#FDE68A" />
-      <stop offset="40%" stop-color="#D97706" />
+      <stop offset="45%" stop-color="#D97706" />
       <stop offset="100%" stop-color="#78350F" />
     </linearGradient>
 
-    <!-- Platform Sole Gradient with High Contrast Lip -->
+    <!-- Sole Platform Gradient -->
     <linearGradient id="soleGrad" x1="0%" y1="0%" x2="0%" y2="100%">
       <stop offset="0%" stop-color="#451A03" />
-      <stop offset="100%" stop-color="#0F172A" />
-    </linearGradient>
-
-    <!-- Multi-Color Badge Pill Gradient -->
-    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#D97706" />
-      <stop offset="100%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#090D16" />
     </linearGradient>
 
     <filter id="floatShadow" x="-20%" y="-20%" width="140%" height="150%">
-      <feDropShadow dx="0" dy="26" stdDeviation="22" flood-color="#000000" flood-opacity="0.75"/>
+      <feDropShadow dx="0" dy="24" stdDeviation="20" flood-color="#000000" flood-opacity="0.75"/>
     </filter>
   </defs>
 
   <!-- Background Canvas -->
   <rect width="600" height="450" fill="url(#studioDark)" rx="24"/>
-  
-  <!-- Modern Tech Circuit Dot Matrix (Subtle) -->
-  <g fill="rgba(255, 255, 255, 0.05)">
-    <circle cx="80" cy="80" r="1.5"/>
-    <circle cx="120" cy="80" r="1.5"/>
-    <circle cx="160" cy="80" r="1.5"/>
-    <circle cx="440" cy="80" r="1.5"/>
-    <circle cx="480" cy="80" r="1.5"/>
-    <circle cx="520" cy="80" r="1.5"/>
-    <circle cx="80" cy="120" r="1.5"/>
-    <circle cx="520" cy="120" r="1.5"/>
-  </g>
 
-  <!-- Dual-Tone Ambient Spotlight Rings -->
+  <!-- Spotlight Ring -->
   <circle cx="280" cy="225" r="175" fill="url(#neonHalo)"/>
-  <circle cx="380" cy="210" r="120" fill="#F59E0B" opacity="0.12" filter="blur(20px)"/>
 
-  <!-- Badge Pill with Multi-Color Border -->
+  <!-- Badge Pill -->
   <g transform="translate(36, 32)">
-    <rect width="125" height="30" rx="15" fill="#0A0E18" stroke="url(#badgeGrad)" stroke-width="1.8"/>
+    <rect width="125" height="30" rx="15" fill="#090E1A" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1.5"/>
     <circle cx="16" cy="15" r="4.5" fill="#D97706"/>
     <text x="70" y="19" fill="#F8FAFC" font-family="'Outfit', sans-serif" font-size="10.5" font-weight="900" text-anchor="middle" letter-spacing="1">SAND AESTHETIC</text>
   </g>
@@ -110,7 +91,7 @@
     
     <!-- Strap Rivet / Logo Button -->
     <circle cx="152" cy="270" r="10" fill="#0B0F17" stroke="#FDE68A" stroke-width="2.2"/>
-    <circle cx="152" cy="270" r="5" fill="#F59E0B"/>
+    <circle cx="152" cy="270" r="5" fill="#D97706"/>
 
     <!-- Ventilation Ports (Holes) -->
     <ellipse cx="280" cy="210" rx="6" ry="10" fill="#78350F" opacity="0.75" transform="rotate(-15 280 210)"/>
@@ -127,19 +108,19 @@
     <ellipse cx="270" cy="270" rx="6" ry="8" fill="#78350F" opacity="0.75"/>
     <ellipse cx="315" cy="276" rx="6" ry="8" fill="#78350F" opacity="0.75"/>
 
-    <!-- Jibbitz Street Charm with Vivid Glow -->
+    <!-- Jibbitz Street Charm -->
     <g transform="translate(325, 228)">
-      <circle cx="14" cy="14" r="16" fill="#0B0F17" stroke="url(#badgeGrad)" stroke-width="2"/>
-      <circle cx="14" cy="14" r="11" fill="#F59E0B"/>
-      <text x="14" y="19" fill="#FFFFFF" font-family="'Outfit', sans-serif" font-size="13" font-weight="900" text-anchor="middle">☕</text>
+      <circle cx="14" cy="14" r="16" fill="#0B0F17" stroke="#FFFFFF" stroke-width="2"/>
+      <circle cx="14" cy="14" r="11" fill="#D97706"/>
+      <text x="14" y="19" fill="#000000" font-family="'Outfit', sans-serif" font-size="13" font-weight="900" text-anchor="middle">☕</text>
     </g>
 
-    <!-- Vibrant Rim Light Specular Reflection -->
+    <!-- Clean Rim Specular Reflection -->
     <path d="M 385 224 C 430 255, 448 278, 438 294" 
           stroke="#FDE68A" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.75"/>
   </g>
 
-  <!-- Bottom Title (Ultra Crisp Modern Typography) -->
+  <!-- Bottom Title -->
   <text x="300" y="414" font-family="'Outfit', sans-serif" font-size="19" font-weight="900" fill="#F8FAFC" text-anchor="middle" letter-spacing="-0.3">Desert Sand Minimalist</text>
   <text x="300" y="433" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="800" fill="#94A3B8" text-anchor="middle" letter-spacing="1.5">ZERO-GRAVITY CLOUD FOAM • WATERPROOF</text>
 </svg>

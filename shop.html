@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
+  <script>
+    (function() {
+      const t = localStorage.getItem("necternest_theme_mode") || "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+
   <!-- Primary SEO Meta Tags -->
   <title>Shop All Drops — 12 Ultra-Comfort Street Clogs | NecterNest</title>
   <meta name="title" content="Shop All Drops — 12 Ultra-Comfort Street Clogs | NecterNest">
@@ -52,6 +59,12 @@
       </nav>
 
       <div class="header-actions">
+        <!-- Theme Toggle Button -->
+        <button type="button" class="theme-toggle-btn" aria-label="Toggle dark and white mode" title="Switch theme mode">
+          <span class="moon-icon">🌙 Dark</span>
+          <span class="sun-icon">☀️ Light</span>
+        </button>
+
         <a href="cart.html" class="cart-icon-btn" aria-label="View Shopping Bag">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
@@ -74,7 +87,6 @@
 
   <!-- Main Shop Page Content -->
   <main>
-    <!-- Shop Page Title Bar -->
     <section class="page-hero" style="padding: 3rem 0 1.5rem;">
       <div class="container">
         <span class="hero-pill">⚡ COMPLETE ARCHIVE // 12 STYLES</span>
@@ -85,10 +97,8 @@
 
     <!-- Filter & Toolbar Controls -->
     <section class="container mt-4 mb-5">
-      <!-- Search & Filters Toolbar -->
       <div class="shop-toolbar" style="background-color: var(--bg-surface); padding: 1.5rem; border-radius: var(--radius-xl); border: 1px solid var(--border-color); margin-bottom: 2rem; box-shadow: var(--shadow-sm);">
         
-        <!-- Search bar & Sorting -->
         <div style="display: flex; gap: 0.85rem; flex-wrap: wrap; align-items: center; justify-content: space-between; margin-bottom: 1.5rem;">
           <div style="position: relative; flex: 1; min-width: 260px;">
             <input type="text" id="search-input" placeholder="🔍 Search by colorway, name, or aesthetic (e.g. Amber, Mint, Waterproof)..." style="width: 100%; height: 48px; border: 1px solid var(--border-color); border-radius: var(--radius-full); padding: 0 1.25rem; font-size: 0.95rem; background-color: var(--bg-surface-elevated); color: var(--text-main);">
@@ -109,7 +119,6 @@
           </div>
         </div>
 
-        <!-- Category Filter Pills -->
         <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.85rem; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
           <div class="category-pills-row" style="padding-bottom: 0;">
             <button type="button" class="filter-chip active" data-category="All">🔥 All Drops (12)</button>
@@ -118,7 +127,7 @@
             <button type="button" class="filter-chip" data-category="Unisex">Unisex Staples</button>
           </div>
 
-          <div id="results-count" style="font-family: 'Outfit', sans-serif; font-size: 0.85rem; font-weight: 800; color: var(--primary); letter-spacing: 0.5px;">
+          <div id="results-count" style="font-family: 'Outfit', sans-serif; font-size: 0.85rem; font-weight: 800; color: var(--neon-cyan); letter-spacing: 0.5px;">
             Showing 12 of 12 Styles
           </div>
         </div>
@@ -126,15 +135,15 @@
 
       <!-- Products Grid -->
       <div class="products-grid" id="shop-products-grid">
-        <!-- Rendered dynamically by js/main.js (initShopPage) -->
+        <!-- Rendered dynamically -->
       </div>
     </section>
 
     <!-- Footwear Care & Sizing Banner -->
     <section class="container mb-5">
-      <div style="background-color: var(--bg-surface); border: 1.5px dashed var(--primary); border-radius: var(--radius-xl); padding: 1.75rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; box-shadow: 0 0 25px rgba(245, 158, 11, 0.1);">
+      <div style="background-color: var(--bg-surface); border: 1.5px dashed var(--border-color); border-radius: var(--radius-xl); padding: 1.75rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; box-shadow: var(--shadow-sm);">
         <div>
-          <h3 style="color: var(--primary); font-size: 1.25rem; margin-bottom: 0.35rem;">Not sure about your size?</h3>
+          <h3 style="color: var(--text-main); font-size: 1.25rem; margin-bottom: 0.35rem;">Not sure about your size?</h3>
           <p style="color: var(--text-muted); font-size: 0.95rem;">NecterNest clogs fit standard Indian/UK shoe sizes (UK 5 to 11). Check our centimeter measurement guide before ordering!</p>
         </div>
         <button type="button" class="btn btn-primary" onclick="openSizeModal()">
