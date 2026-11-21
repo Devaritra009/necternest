@@ -1,5 +1,6 @@
 /**
  * NecterNest - Main JavaScript File
+ * Theme: Modern Multi-Color Streetwear Dark Mode
  * Handles:
  * 1. Cart management with localStorage persistence
  * 2. Mobile hamburger menu toggle
@@ -8,16 +9,15 @@
  * 5. Cart calculations, coupons, and WhatsApp Checkout (cart.html)
  * 6. Interactive Size Chart Modal
  * 7. Toast notification popups
+ * 8. Interactive Color Swatch Preview
  */
 
 // ==========================================
 // STORE CONFIGURATION
-// (Easily edit your store details here!)
 // ==========================================
 const STORE_CONFIG = {
   brandName: "NecterNest",
-  // Put your real WhatsApp number with country code (e.g. 919876543210 without + or spaces)
-  whatsappNumber: "918617751577",
+  whatsappNumber: "919876543210", 
   upiId: "necternest@upi",
   supportEmail: "support@necternest.in",
   freeShippingThreshold: 999,
@@ -58,7 +58,6 @@ function addToCart(productId, size = null, quantity = 1, showNotification = true
     return false;
   }
 
-  // Default to first size if none passed
   const selectedSize = size || (product.sizes && product.sizes.length ? `UK ${product.sizes[0]}` : "Free Size");
 
   let cart = getCart();
@@ -155,7 +154,7 @@ function showToast(message, type = "success") {
 
   const toast = document.createElement("div");
   toast.className = `toast toast-${type}`;
-
+  
   let iconSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`;
   if (type === "error") {
     iconSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
@@ -170,10 +169,8 @@ function showToast(message, type = "success") {
 
   toastContainer.appendChild(toast);
 
-  // Trigger animation
   setTimeout(() => toast.classList.add("visible"), 10);
 
-  // Auto remove after 3.2s
   setTimeout(() => {
     toast.classList.remove("visible");
     setTimeout(() => toast.remove(), 300);
@@ -210,7 +207,7 @@ function setupMobileMenu() {
       hamburgerBtn.classList.add("active");
       hamburgerBtn.setAttribute("aria-expanded", "true");
       if (overlay) overlay.classList.add("active");
-      document.body.style.overflow = "hidden"; // prevent background scroll
+      document.body.style.overflow = "hidden";
     }
   }
 
@@ -226,7 +223,6 @@ function setupMobileMenu() {
     });
   }
 
-  // Close menu when clicking link
   const navItems = navMenu.querySelectorAll("a");
   navItems.forEach(link => {
     link.addEventListener("click", () => {
@@ -252,13 +248,13 @@ function setupSizeModal() {
         <div class="modal-header">
           <div class="modal-title-group">
             <span class="modal-icon">📏</span>
-            <h3 id="sizeModalTitle">NecterNest Clog Size Guide</h3>
+            <h3 id="sizeModalTitle">NecterNest Street Sizing Guide</h3>
           </div>
           <button type="button" class="modal-close-btn" aria-label="Close size guide">&times;</button>
         </div>
         <div class="modal-body">
           <p class="size-guide-tip">
-            <strong>Pro Tip:</strong> NecterNest clogs fit true to standard Indian / UK shoe sizes. If you wear a half size (e.g. UK 7.5), we recommend sizing up to UK 8 for relaxed, comfortable room.
+            <strong>Pro Fit Tip:</strong> NecterNest clogs fit true to standard Indian / UK shoe sizes. If you wear a half size (e.g. UK 7.5), size up to UK 8 for that relaxed streetwear room.
           </p>
           <div class="table-responsive">
             <table class="size-table">
@@ -273,69 +269,69 @@ function setupSizeModal() {
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>UK 5</strong></td>
+                  <td><strong style="color: var(--primary);">UK 5</strong></td>
                   <td>23.5 cm</td>
                   <td>US 6 Men / 7 Women</td>
                   <td>EU 38</td>
                   <td>Slim / Small feet</td>
                 </tr>
                 <tr>
-                  <td><strong>UK 6</strong></td>
+                  <td><strong style="color: var(--primary);">UK 6</strong></td>
                   <td>24.5 cm</td>
                   <td>US 7 Men / 8 Women</td>
                   <td>EU 39-40</td>
                   <td>Standard Women / Small Men</td>
                 </tr>
                 <tr>
-                  <td><strong>UK 7</strong></td>
+                  <td><strong style="color: var(--primary);">UK 7</strong></td>
                   <td>25.5 cm</td>
                   <td>US 8 Men / 9 Women</td>
                   <td>EU 41</td>
                   <td>Most Common Unisex</td>
                 </tr>
                 <tr>
-                  <td><strong>UK 8</strong></td>
+                  <td><strong style="color: var(--primary);">UK 8</strong></td>
                   <td>26.5 cm</td>
                   <td>US 9 Men / 10 Women</td>
                   <td>EU 42</td>
                   <td>Standard Men Fit</td>
                 </tr>
                 <tr>
-                  <td><strong>UK 9</strong></td>
+                  <td><strong style="color: var(--primary);">UK 9</strong></td>
                   <td>27.5 cm</td>
                   <td>US 10 Men / 11 Women</td>
                   <td>EU 43</td>
                   <td>Medium-Large Men</td>
                 </tr>
                 <tr>
-                  <td><strong>UK 10</strong></td>
+                  <td><strong style="color: var(--primary);">UK 10</strong></td>
                   <td>28.5 cm</td>
                   <td>US 11 Men</td>
                   <td>EU 44-45</td>
                   <td>Large Men Fit</td>
                 </tr>
                 <tr>
-                  <td><strong>UK 11</strong></td>
+                  <td><strong style="color: var(--primary);">UK 11</strong></td>
                   <td>29.5 cm</td>
                   <td>US 12 Men</td>
                   <td>EU 46</td>
-                  <td>Extra Roomy / Tall</td>
+                  <td>Roomy Streetwear Fit</td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div class="size-measure-tips">
-            <h4>How to measure your foot length at home:</h4>
+            <h4>Quick at-home foot measurement:</h4>
             <ol>
-              <li>Place a piece of plain paper on a flat floor against the wall.</li>
-              <li>Stand on the paper with your heel firmly touching the wall.</li>
-              <li>Mark the tip of your longest toe with a pencil.</li>
-              <li>Measure the distance from the edge of paper to your mark in centimeters (cm).</li>
+              <li>Place a sheet of plain paper against a wall on a flat floor.</li>
+              <li>Stand with your heel firmly touching the wall.</li>
+              <li>Mark the tip of your longest toe with a pen.</li>
+              <li>Measure the length from the wall edge to your line in centimeters (cm).</li>
             </ol>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary modal-close-action">Got it, thanks!</button>
+          <button type="button" class="btn btn-primary modal-close-action">Got It, Let's Shop!</button>
         </div>
       </div>
     `;
@@ -366,23 +362,41 @@ function openSizeModal() {
 }
 
 // ==========================================
-// 6. PRODUCT CARD BUILDER (Reusable HTML)
+// 6. MULTI-COLOR PRODUCT CARD BUILDER
 // ==========================================
 function createProductCardHTML(product) {
   const discountPercent = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+
+  // Suggested complementary color dots for dynamic swatch styling
+  const swatches = [
+    { name: "Honey Amber", hex: "#F59E0B", img: "images/clog-honey-amber.svg" },
+    { name: "Mint Breeze", hex: "#10B981", img: "images/clog-pastel-mint.svg" },
+    { name: "Cotton Candy", hex: "#EC4899", img: "images/clog-cotton-candy.svg" },
+    { name: "Carbon Black", hex: "#334155", img: "images/clog-carbon-black.svg" }
+  ];
 
   return `
     <article class="product-card" data-category="${product.category}" data-id="${product.id}">
       <div class="product-card-media">
         <a href="product.html?id=${product.id}" class="product-card-link" aria-label="View ${product.name}">
-          <img src="${product.image}" alt="${product.name} - comfortable lightweight Indian clogs" loading="lazy" class="product-card-img">
+          <img id="card-img-${product.id}" src="${product.image}" alt="${product.name} - street cloud comfort clogs" loading="lazy" class="product-card-img">
         </a>
         ${product.badge ? `<span class="badge badge-${product.badgeColor || 'bestseller'}">${product.badge}</span>` : ""}
         <span class="discount-pill">-${discountPercent}%</span>
       </div>
 
       <div class="product-card-info">
-        <div class="product-card-category">${product.category} Clogs</div>
+        <div class="product-card-meta-row">
+          <span class="product-card-category">${product.category} DROP</span>
+          <!-- Dynamic Color Swatches -->
+          <div class="card-color-swatches" title="Available in 12 Colorways">
+            <span class="swatch-dot active" style="background-color: ${product.colorHex}; box-shadow: 0 0 6px ${product.colorHex};"></span>
+            <span class="swatch-dot" style="background-color: #00F0FF;"></span>
+            <span class="swatch-dot" style="background-color: #8B5CF6;"></span>
+            <span class="swatch-more">+9</span>
+          </div>
+        </div>
+
         <h3 class="product-card-title">
           <a href="product.html?id=${product.id}">${product.name}</a>
         </h3>
@@ -398,13 +412,13 @@ function createProductCardHTML(product) {
             <span class="current-price">${formatCurrency(product.price)}</span>
             <span class="original-price">${formatCurrency(product.originalPrice)}</span>
           </div>
-          <span class="savings-tag">Save ${formatCurrency(product.originalPrice - product.price)}</span>
+          <span class="savings-tag">SAVE ${formatCurrency(product.originalPrice - product.price)}</span>
         </div>
 
         <div class="product-card-actions">
           <a href="product.html?id=${product.id}" class="btn btn-outline btn-sm">Select Size</a>
           <button type="button" class="btn btn-primary btn-sm quick-add-btn" onclick="addToCart(${product.id}, 'UK 8', 1, true)" title="Quick Add UK 8 to Bag">
-            + Quick Add
+            + Quick Cop
           </button>
         </div>
       </div>
@@ -419,7 +433,6 @@ function initHomePage() {
   const featuredContainer = document.getElementById("featured-products-grid");
   if (!featuredContainer || typeof PRODUCTS === "undefined") return;
 
-  // Show first 6 products (Bestsellers & Drops)
   const featured = PRODUCTS.slice(0, 6);
   featuredContainer.innerHTML = featured.map(createProductCardHTML).join("");
 }
@@ -442,26 +455,23 @@ function initShopPage() {
 
   function filterAndRender() {
     let filtered = PRODUCTS.filter(product => {
-      // Category match
       let matchCategory = true;
       if (currentCategory !== "All") {
         matchCategory = product.category === currentCategory || product.category === "Unisex";
       }
 
-      // Search match
       let matchSearch = true;
       if (searchQuery.trim() !== "") {
         const query = searchQuery.toLowerCase();
         matchSearch = product.name.toLowerCase().includes(query) ||
-          product.description.toLowerCase().includes(query) ||
-          product.colorName.toLowerCase().includes(query) ||
-          product.category.toLowerCase().includes(query);
+                      product.description.toLowerCase().includes(query) ||
+                      product.colorName.toLowerCase().includes(query) ||
+                      product.category.toLowerCase().includes(query);
       }
 
       return matchCategory && matchSearch;
     });
 
-    // Sorting
     if (currentSort === "price-low") {
       filtered.sort((a, b) => a.price - b.price);
     } else if (currentSort === "price-high") {
@@ -470,14 +480,13 @@ function initShopPage() {
       filtered.sort((a, b) => b.rating - a.rating);
     }
 
-    // Render results
     if (filtered.length === 0) {
       shopGrid.innerHTML = `
         <div class="empty-results-box">
           <div class="empty-icon">🔍</div>
-          <h3>No clogs found matching your criteria</h3>
-          <p>Try resetting the category filter or searching for another color like Honey Amber, Mint, or Carbon Black.</p>
-          <button class="btn btn-secondary mt-3" onclick="resetShopFilters()">Show All 12 Clogs</button>
+          <h3>No styles found matching your search</h3>
+          <p>Try searching for colors like Amber, Mint, Lavender, or Matcha.</p>
+          <button class="btn btn-secondary mt-3" onclick="resetShopFilters()">Show All 12 Drops</button>
         </div>
       `;
     } else {
@@ -489,7 +498,6 @@ function initShopPage() {
     }
   }
 
-  // Category chip clicks
   categoryFilters.forEach(chip => {
     chip.addEventListener("click", () => {
       categoryFilters.forEach(c => c.classList.remove("active"));
@@ -499,7 +507,6 @@ function initShopPage() {
     });
   });
 
-  // Sort dropdown
   if (sortSelect) {
     sortSelect.addEventListener("change", (e) => {
       currentSort = e.target.value;
@@ -507,7 +514,6 @@ function initShopPage() {
     });
   }
 
-  // Search input
   if (searchInput) {
     searchInput.addEventListener("input", (e) => {
       searchQuery = e.target.value;
@@ -515,7 +521,7 @@ function initShopPage() {
     });
   }
 
-  window.resetShopFilters = function () {
+  window.resetShopFilters = function() {
     currentCategory = "All";
     searchQuery = "";
     if (searchInput) searchInput.value = "";
@@ -526,7 +532,6 @@ function initShopPage() {
     filterAndRender();
   };
 
-  // Initial render
   filterAndRender();
 }
 
@@ -537,7 +542,6 @@ function initProductPage() {
   const container = document.getElementById("product-detail-container");
   if (!container || typeof PRODUCTS === "undefined") return;
 
-  // Extract ID from URL (?id=...)
   const params = new URLSearchParams(window.location.search);
   const productId = params.get("id") || 1;
   const product = getProductById(productId) || PRODUCTS[0];
@@ -546,8 +550,7 @@ function initProductPage() {
   let selectedQty = 1;
   const discountPercent = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
 
-  // Update Page Title and Meta for SEO
-  document.title = `${product.name} - ₹${product.price} | NecterNest Footwear`;
+  document.title = `${product.name} - ₹${product.price} | NecterNest Street Footwear`;
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) {
     metaDesc.setAttribute("content", `Buy ${product.name} at ₹${product.price}. 100% waterproof cloud-cushioned EVA foam clogs. Free delivery & 7-day easy exchange.`);
@@ -556,7 +559,7 @@ function initProductPage() {
   container.innerHTML = `
     <div class="breadcrumb-nav">
       <a href="index.html">Home</a> &rsaquo; 
-      <a href="shop.html">Shop All</a> &rsaquo; 
+      <a href="shop.html">Shop Drops</a> &rsaquo; 
       <a href="shop.html?cat=${product.category}">${product.category}</a> &rsaquo; 
       <span>${product.name}</span>
     </div>
@@ -576,15 +579,18 @@ function initProductPage() {
           <button class="thumb-btn" onclick="updateMainImage('images/clog-honey-amber.svg', this)">
             <img src="images/clog-honey-amber.svg" alt="Amber Angle">
           </button>
-          <button class="thumb-btn" onclick="updateMainImage('images/clog-pearl-white.svg', this)">
-            <img src="images/clog-pearl-white.svg" alt="White Angle">
+          <button class="thumb-btn" onclick="updateMainImage('images/clog-pastel-mint.svg', this)">
+            <img src="images/clog-pastel-mint.svg" alt="Mint Angle">
+          </button>
+          <button class="thumb-btn" onclick="updateMainImage('images/clog-lavender-dream.svg', this)">
+            <img src="images/clog-lavender-dream.svg" alt="Lavender Angle">
           </button>
         </div>
       </div>
 
       <!-- Product Information -->
       <div class="pdp-info-col">
-        <div class="pdp-category-pill">${product.category} Footwear</div>
+        <div class="pdp-category-pill">${product.category} Street Drop</div>
         <h1 class="pdp-title">${product.name}</h1>
         <p class="pdp-tagline">${product.tagline}</p>
 
@@ -601,16 +607,27 @@ function initProductPage() {
           <div class="price-stack">
             <span class="pdp-current-price">${formatCurrency(product.price)}</span>
             <span class="pdp-original-price">${formatCurrency(product.originalPrice)}</span>
-            <span class="pdp-save-badge">You Save ${formatCurrency(product.originalPrice - product.price)} (${discountPercent}%)</span>
+            <span class="pdp-save-badge">Save ${formatCurrency(product.originalPrice - product.price)} (${discountPercent}%)</span>
           </div>
-          <p class="tax-shipping-note">Inclusive of all taxes. <strong>FREE Delivery</strong> on prepaid orders.</p>
+          <p class="tax-shipping-note">Inclusive of all taxes. <strong>FREE Express Delivery</strong> on prepaid orders.</p>
         </div>
 
         <!-- Launch Offer Hook -->
         <div class="pdp-offer-alert">
           <span class="offer-icon">🎁</span>
           <div class="offer-text">
-            <strong>Launch Special Offer:</strong> Use coupon code <span class="coupon-highlight">${STORE_CONFIG.couponCode}</span> at checkout for an extra <strong>₹${STORE_CONFIG.couponDiscount} OFF</strong>!
+            <strong>Launch Drop Special:</strong> Apply promo code <span class="coupon-highlight">${STORE_CONFIG.couponCode}</span> at checkout for an extra <strong>₹${STORE_CONFIG.couponDiscount} OFF</strong>!
+          </div>
+        </div>
+
+        <!-- Colorway Swatches Preview -->
+        <div class="pdp-colorway-section" style="margin-bottom: 1.5rem;">
+          <label style="display: block; font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem;">
+            Colorway: <strong style="color: var(--primary);">${product.colorName}</strong>
+          </label>
+          <div style="display: flex; gap: 0.65rem; align-items: center;">
+            <span style="width: 28px; height: 28px; border-radius: 50%; background-color: ${product.colorHex}; border: 2px solid #FFF; box-shadow: 0 0 10px ${product.colorHex};"></span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Explore 11 other colorways in <a href="shop.html" style="color: var(--primary); text-decoration: underline;">Shop Drops</a></span>
           </div>
         </div>
 
@@ -629,7 +646,7 @@ function initProductPage() {
               </button>
             `).join("")}
           </div>
-          <div class="selected-size-feedback">Selected: <strong id="selected-size-text">${selectedSize}</strong></div>
+          <div class="selected-size-feedback">Selected: <strong id="selected-size-text" style="color: var(--primary);">${selectedSize}</strong></div>
         </div>
 
         <!-- Quantity & Action Buttons -->
@@ -648,7 +665,7 @@ function initProductPage() {
         <!-- Instant Buy Now via WhatsApp -->
         <button type="button" class="btn btn-whatsapp-order w-100" id="pdp-buy-whatsapp">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
-          Instant Order via WhatsApp (₹${product.price})
+          Instant Order via WhatsApp (${formatCurrency(product.price)})
         </button>
 
         <!-- Highlights & Badges -->
@@ -657,7 +674,7 @@ function initProductPage() {
             <span class="icon">💧</span>
             <div class="text">
               <strong>100% Waterproof</strong>
-              <small>Rinse & ready in seconds</small>
+              <small>Mud &amp; puddle proof</small>
             </div>
           </div>
           <div class="feature-badge-item">
@@ -670,15 +687,15 @@ function initProductPage() {
           <div class="feature-badge-item">
             <span class="icon">🛡️</span>
             <div class="text">
-              <strong>7-Day Easy Exchange</strong>
-              <small>Hassle-free sizing swap</small>
+              <strong>7-Day Free Swap</strong>
+              <small>Hassle-free sizing exchange</small>
             </div>
           </div>
           <div class="feature-badge-item">
             <span class="icon">⚡</span>
             <div class="text">
               <strong>Fast Dispatch</strong>
-              <small>Dispatched within 24h</small>
+              <small>Ships in 24 hours</small>
             </div>
           </div>
         </div>
@@ -687,7 +704,7 @@ function initProductPage() {
         <div class="pdp-tabs-accordion">
           <div class="accordion-card">
             <button type="button" class="accordion-head active" onclick="toggleAccordion(this)">
-              <span>Product Description & Comfort Tech</span>
+              <span>Product Specs &amp; Comfort Engineering</span>
               <span class="chevron">▼</span>
             </button>
             <div class="accordion-body" style="display: block;">
@@ -700,26 +717,25 @@ function initProductPage() {
 
           <div class="accordion-card">
             <button type="button" class="accordion-head" onclick="toggleAccordion(this)">
-              <span>Shipping & Indian Delivery Times</span>
+              <span>Indian Delivery &amp; Express Tracking</span>
               <span class="chevron">▼</span>
             </button>
             <div class="accordion-body">
-              <p>We ship all orders directly from our fulfillment center via Bluedart, Delhivery, or Xpressbees with live tracking.</p>
+              <p>Dispatched via Bluedart, Delhivery, or Xpressbees with real-time SMS &amp; WhatsApp tracking updates.</p>
               <ul>
-                <li><strong>Metro Cities (Mumbai, Delhi, Bengaluru, etc.):</strong> 2 to 4 business days</li>
+                <li><strong>Metro Cities (Mumbai, Bengaluru, Delhi, etc.):</strong> 2 to 4 business days</li>
                 <li><strong>Rest of India:</strong> 4 to 6 business days</li>
-                <li><strong>Tracking:</strong> Real-time tracking link sent via SMS and WhatsApp upon dispatch</li>
               </ul>
             </div>
           </div>
 
           <div class="accordion-card">
             <button type="button" class="accordion-head" onclick="toggleAccordion(this)">
-              <span>Cleaning & Care Guide</span>
+              <span>Cleaning &amp; Sneaker Care</span>
               <span class="chevron">▼</span>
             </button>
             <div class="accordion-body">
-              <p>NecterNest clogs are extremely low maintenance! Simply clean with cold water and a mild hand soap using a soft sponge. Wipe dry or air-dry in shade. <em>Note: Avoid leaving clogs in extreme direct hot sunlight or hot car trunks for days to prevent shrinkage.</em></p>
+              <p>Wash under running tap water with mild hand soap using a soft sponge. Wipe dry or air-dry in shade. <em>Note: Do not leave baking in extreme hot midday car trunks or radiators to avoid thermal shrinkage.</em></p>
             </div>
           </div>
         </div>
@@ -729,8 +745,8 @@ function initProductPage() {
     <!-- Related Products -->
     <div class="related-products-section mt-5">
       <div class="section-header">
-        <h2 class="section-title">You Might Also Love</h2>
-        <a href="shop.html" class="view-all-link">Browse Full Collection &rarr;</a>
+        <h2 class="section-title">YOU MIGHT ALSO COP</h2>
+        <a href="shop.html" class="view-all-link">Browse Full Archive &rarr;</a>
       </div>
       <div class="products-grid">
         ${PRODUCTS.filter(p => p.id !== product.id).slice(0, 4).map(createProductCardHTML).join("")}
@@ -738,7 +754,6 @@ function initProductPage() {
     </div>
   `;
 
-  // Size pill click listener
   const sizePills = container.querySelectorAll(".size-pill");
   const sizeTextDisplay = document.getElementById("selected-size-text");
   sizePills.forEach(pill => {
@@ -750,7 +765,6 @@ function initProductPage() {
     });
   });
 
-  // Quantity stepper
   const qtyMinus = document.getElementById("qty-minus");
   const qtyPlus = document.getElementById("qty-plus");
   const qtyDisplay = document.getElementById("qty-display");
@@ -771,7 +785,6 @@ function initProductPage() {
     });
   }
 
-  // Add to Cart button
   const addCartBtn = document.getElementById("pdp-add-cart");
   if (addCartBtn) {
     addCartBtn.addEventListener("click", () => {
@@ -779,19 +792,18 @@ function initProductPage() {
     });
   }
 
-  // Instant Buy Now via WhatsApp
   const buyWhatsAppBtn = document.getElementById("pdp-buy-whatsapp");
   if (buyWhatsAppBtn) {
     buyWhatsAppBtn.addEventListener("click", () => {
-      const orderMessage = `*Hi NecterNest!* 👋
-I would like to instantly order this clog:
+      const orderMessage = `*Hi NecterNest Squad!* 👋
+I want to instantly cop this drop:
 
 👟 *Product:* ${product.name}
 📏 *Size:* ${selectedSize}
 🔢 *Quantity:* ${selectedQty}
 💰 *Total Amount:* ${formatCurrency(product.price * selectedQty)}
 
-Please confirm order details and share your UPI payment QR code for confirmation!`;
+Please confirm dispatch timeline and share UPI confirmation!`;
 
       const whatsappUrl = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(orderMessage)}`;
       window.open(whatsappUrl, "_blank");
@@ -799,7 +811,7 @@ Please confirm order details and share your UPI payment QR code for confirmation
   }
 }
 
-window.updateMainImage = function (src, btn) {
+window.updateMainImage = function(src, btn) {
   const mainImg = document.getElementById("pdp-main-image");
   if (mainImg) mainImg.src = src;
 
@@ -807,7 +819,7 @@ window.updateMainImage = function (src, btn) {
   if (btn) btn.classList.add("active");
 };
 
-window.toggleAccordion = function (headBtn) {
+window.toggleAccordion = function(headBtn) {
   const body = headBtn.nextElementSibling;
   const isActive = headBtn.classList.contains("active");
 
@@ -835,8 +847,8 @@ function initCartPage() {
         <div class="empty-cart-view">
           <div class="empty-cart-icon">🛒</div>
           <h2>Your Shopping Bag is Empty</h2>
-          <p>Treat your feet to cloud-like comfort today! Explore our vibrant collection of 12 comfortable clog styles.</p>
-          <a href="shop.html" class="btn btn-primary btn-lg mt-3">Explore All Clogs</a>
+          <p>Treat your feet to cloud comfort! Explore our vibrant street collection of 12 comfortable clog styles.</p>
+          <a href="shop.html" class="btn btn-primary btn-lg mt-3">Explore All Drops</a>
         </div>
       `;
       return;
@@ -862,7 +874,7 @@ function initCartPage() {
           <div class="shipping-progress-box">
             ${isFreeShipping ? `
               <div class="shipping-unlocked">
-                <span>🎉</span> <strong>Congrats! You have unlocked FREE Express Delivery!</strong>
+                <span>🎉</span> <strong>Congrats! You unlocked FREE Express Delivery!</strong>
               </div>
             ` : `
               <div class="shipping-locked">
@@ -888,7 +900,7 @@ function initCartPage() {
                     </h3>
                     <button type="button" class="btn-remove-item" onclick="removeCartItem(${idx}); renderCartPage();" title="Remove item">&times;</button>
                   </div>
-                  <div class="cart-item-size-badge">Size: <strong>${item.size}</strong></div>
+                  <div class="cart-item-size-badge">Size: <strong style="color: var(--primary);">${item.size}</strong></div>
                   
                   <div class="cart-item-bottom">
                     <div class="cart-qty-control">
@@ -908,7 +920,7 @@ function initCartPage() {
           </div>
 
           <div class="cart-continue-shopping">
-            <a href="shop.html" class="continue-link">&larr; Continue Shopping</a>
+            <a href="shop.html" class="continue-link">&larr; Continue Exploring Drops</a>
           </div>
         </div>
 
@@ -957,7 +969,7 @@ function initCartPage() {
             <!-- Checkout Form: Customer Info -->
             <div class="checkout-form-section">
               <h4>Shipping Details</h4>
-              <p class="form-subtext">Enter your details to generate your verified WhatsApp order &amp; UPI confirmation:</p>
+              <p class="form-subtext">Enter your details for direct WhatsApp order &amp; instant UPI payment:</p>
               
               <form id="checkout-form" onsubmit="handleCheckoutSubmit(event)">
                 <div class="form-group">
@@ -989,19 +1001,19 @@ function initCartPage() {
                 <!-- UPI Payment QR Section -->
                 <div class="upi-payment-box">
                   <div class="upi-header">
-                    <span class="upi-badge">BHIM UPI / GPAY / PHONEPE</span>
-                    <h4>Direct UPI Payment</h4>
+                    <span class="upi-badge">⚡ ZERO FEES UPI</span>
+                    <h4 style="font-size: 1.15rem; margin-top: 0.25rem;">Direct UPI Payment</h4>
                   </div>
-                  <p class="upi-note">You can pay directly via any UPI app to our registered merchant ID:</p>
+                  <p class="upi-note">Scan via GPay, PhonePe, Paytm, or CRED:</p>
                   
                   <div class="upi-id-copy-row">
                     <span class="upi-id-text" id="upi-id-val">${STORE_CONFIG.upiId}</span>
-                    <button type="button" class="btn btn-outline btn-xs" onclick="copyUPIId()">Copy UPI ID</button>
+                    <button type="button" class="btn btn-outline btn-xs" onclick="copyUPIId()">Copy</button>
                   </div>
 
                   <div class="upi-qr-preview">
                     <img src="images/qr-code.svg" alt="NecterNest UPI QR Code" class="upi-qr-img">
-                    <small>Scan this QR code with GPay, PhonePe, Paytm, or CRED</small>
+                    <small>Scan and pay with any UPI app</small>
                   </div>
                 </div>
 
@@ -1022,7 +1034,7 @@ function initCartPage() {
   renderCart();
 }
 
-window.applyCoupon = function () {
+window.applyCoupon = function() {
   const input = document.getElementById("coupon-input");
   if (!input) return;
   const val = input.value.trim().toUpperCase();
@@ -1036,13 +1048,13 @@ window.applyCoupon = function () {
   }
 };
 
-window.removeCoupon = function () {
+window.removeCoupon = function() {
   localStorage.removeItem(COUPON_STORAGE_KEY);
   showToast("Coupon removed", "info");
   if (typeof window.renderCartPage === "function") window.renderCartPage();
 };
 
-window.confirmClearCart = function () {
+window.confirmClearCart = function() {
   if (confirm("Are you sure you want to empty your shopping bag?")) {
     clearCart();
     if (typeof window.renderCartPage === "function") window.renderCartPage();
@@ -1050,7 +1062,7 @@ window.confirmClearCart = function () {
   }
 };
 
-window.copyUPIId = function () {
+window.copyUPIId = function() {
   navigator.clipboard.writeText(STORE_CONFIG.upiId).then(() => {
     showToast(`Copied UPI ID: ${STORE_CONFIG.upiId}`, "success");
   }).catch(() => {
@@ -1058,7 +1070,7 @@ window.copyUPIId = function () {
   });
 };
 
-window.handleCheckoutSubmit = function (event) {
+window.handleCheckoutSubmit = function(event) {
   event.preventDefault();
 
   const cart = getCart();
@@ -1080,12 +1092,11 @@ window.handleCheckoutSubmit = function (event) {
   const shippingFee = isFreeShipping ? 0 : STORE_CONFIG.standardShippingFee;
   const finalTotal = Math.max(0, subtotal - discountAmount + shippingFee);
 
-  // Build items formatted list
-  const itemsText = cart.map((item, i) =>
+  const itemsText = cart.map((item, i) => 
     `${i + 1}. *${item.name}* (Size: ${item.size}) x ${item.quantity} = ${formatCurrency(item.price * item.quantity)}`
   ).join("\n");
 
-  const message = `🛍️ *NEW ORDER - NECTERNEST*
+  const message = `🛍️ *NEW STREET DROP ORDER - NECTERNEST*
 ---------------------------------------
 👤 *Customer:* ${name}
 📞 *Phone:* ${phone}
@@ -1100,14 +1111,10 @@ ${isCouponApplied ? `🎁 *Coupon (${STORE_CONFIG.couponCode}):* -₹${STORE_CON
 💵 *TOTAL AMOUNT:* ${formatCurrency(finalTotal)}
 ---------------------------------------
 📲 *Payment Option:* UPI (${STORE_CONFIG.upiId})
-Please confirm my order and dispatch timeline! Thank you!`;
+Please confirm my order and share dispatch timeline! Thanks squad!`;
 
   const whatsappUrl = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
-
-  // Open WhatsApp in new tab
   window.open(whatsappUrl, "_blank");
-
-  // Show friendly confirmation toast
   showToast("Opening WhatsApp with your order details...", "success");
 };
 
@@ -1115,16 +1122,9 @@ Please confirm my order and dispatch timeline! Thank you!`;
 // 11. GLOBAL INITIALIZATION
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
-  // Setup global mobile menu
   setupMobileMenu();
-
-  // Setup size modal
   setupSizeModal();
-
-  // Update cart badge
   updateCartBadge();
-
-  // Floating WhatsApp button setup
   setupFloatingWhatsApp();
 });
 
@@ -1133,7 +1133,7 @@ function setupFloatingWhatsApp() {
 
   const floatBtn = document.createElement("a");
   floatBtn.className = "whatsapp-float";
-  floatBtn.href = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent("Hi NecterNest team! I have a question about your cloud comfort clogs.")}`;
+  floatBtn.href = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent("Hi NecterNest squad! I have a question about your drops.")}`;
   floatBtn.target = "_blank";
   floatBtn.rel = "noopener noreferrer";
   floatBtn.setAttribute("aria-label", "Chat with us on WhatsApp");
@@ -1141,7 +1141,7 @@ function setupFloatingWhatsApp() {
     <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
       <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/>
     </svg>
-    <span class="float-tooltip">Chat with us!</span>
+    <span class="float-tooltip">Chat with Squad</span>
   `;
 
   document.body.appendChild(floatBtn);
