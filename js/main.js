@@ -60,7 +60,7 @@ const STORE_CONFIG = {
   brandName: "NecterNest",
   whatsappNumber: "919876543210", 
   upiId: "necternest@upi",
-  supportEmail: "support@necternest.in",
+  supportEmail: "necternestofficial@gmail.com",
   freeShippingThreshold: 999,
   standardShippingFee: 49,
   couponCode: "FIRSTNEST",
