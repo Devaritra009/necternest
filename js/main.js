@@ -99,11 +99,16 @@ function addToCart(productId, size = null, quantity = 1, showNotification = true
     return false;
   }
 
-  const selectedSize = size || (product.sizes && product.sizes.length ? `UK ${product.sizes[0]}` : "Free Size");
+  if (typeof isProductInStock === "function" && !isProductInStock(product)) {
+    showToast("Sorry, this drop is currently Out of Stock!", "error");
+    return false;
+  }
+
+  const selectedSize = size || (product.sizes && product.sizes.length ? `${product.sizes[0]}` : "8");
 
   let cart = getCart();
   const existingItemIndex = cart.findIndex(
-    item => item.id === product.id && item.size === selectedSize
+    item => item.id === product.id && String(item.size) === String(selectedSize)
   );
 
   if (existingItemIndex > -1) {
@@ -115,7 +120,7 @@ function addToCart(productId, size = null, quantity = 1, showNotification = true
       price: product.price,
       originalPrice: product.originalPrice,
       image: product.image,
-      size: selectedSize,
+      size: String(selectedSize),
       quantity: quantity
     });
   }
@@ -123,7 +128,7 @@ function addToCart(productId, size = null, quantity = 1, showNotification = true
   saveCart(cart);
 
   if (showNotification) {
-    showToast(`Added to Bag: ${product.name} (${selectedSize})`, "success");
+    showToast(`Added to Bag: ${product.name} (Size: ${selectedSize})`, "success");
   }
   return true;
 }
@@ -295,13 +300,13 @@ function setupSizeModal() {
         </div>
         <div class="modal-body">
           <p class="size-guide-tip">
-            <strong>Pro Fit Tip:</strong> NecterNest clogs fit true to standard Indian / UK shoe sizes. If you wear a half size (e.g. UK 7.5), size up to UK 8 for relaxed, comfortable room.
+            <strong>Pro Fit Tip:</strong> NecterNest footwear fits true to standard Indian shoe sizes (5 to 10). If you wear a half size (e.g. 7.5), size up to 8 for relaxed, comfortable room.
           </p>
           <div class="table-responsive">
             <table class="size-table">
               <thead>
                 <tr>
-                  <th>UK / India</th>
+                  <th>Size (India)</th>
                   <th>Foot Length (cm)</th>
                   <th>US Size</th>
                   <th>EU Size</th>
@@ -310,49 +315,49 @@ function setupSizeModal() {
               </thead>
               <tbody>
                 <tr>
-                  <td><strong style="color: var(--primary);">UK 5</strong></td>
+                  <td><strong style="color: var(--primary);">5</strong></td>
                   <td>23.5 cm</td>
                   <td>US 6 Men / 7 Women</td>
                   <td>EU 38</td>
                   <td>Slim / Small feet</td>
                 </tr>
                 <tr>
-                  <td><strong style="color: var(--primary);">UK 6</strong></td>
+                  <td><strong style="color: var(--primary);">6</strong></td>
                   <td>24.5 cm</td>
                   <td>US 7 Men / 8 Women</td>
                   <td>EU 39-40</td>
                   <td>Standard Women / Small Men</td>
                 </tr>
                 <tr>
-                  <td><strong style="color: var(--primary);">UK 7</strong></td>
+                  <td><strong style="color: var(--primary);">7</strong></td>
                   <td>25.5 cm</td>
                   <td>US 8 Men / 9 Women</td>
                   <td>EU 41</td>
                   <td>Most Common Unisex</td>
                 </tr>
                 <tr>
-                  <td><strong style="color: var(--primary);">UK 8</strong></td>
+                  <td><strong style="color: var(--primary);">8</strong></td>
                   <td>26.5 cm</td>
                   <td>US 9 Men / 10 Women</td>
                   <td>EU 42</td>
                   <td>Standard Men Fit</td>
                 </tr>
                 <tr>
-                  <td><strong style="color: var(--primary);">UK 9</strong></td>
+                  <td><strong style="color: var(--primary);">9</strong></td>
                   <td>27.5 cm</td>
                   <td>US 10 Men / 11 Women</td>
                   <td>EU 43</td>
                   <td>Medium-Large Men</td>
                 </tr>
                 <tr>
-                  <td><strong style="color: var(--primary);">UK 10</strong></td>
+                  <td><strong style="color: var(--primary);">10</strong></td>
                   <td>28.5 cm</td>
                   <td>US 11 Men</td>
                   <td>EU 44-45</td>
                   <td>Large Men Fit</td>
                 </tr>
                 <tr>
-                  <td><strong style="color: var(--primary);">UK 11</strong></td>
+                  <td><strong style="color: var(--primary);">11</strong></td>
                   <td>29.5 cm</td>
                   <td>US 12 Men</td>
                   <td>EU 46</td>
@@ -406,28 +411,32 @@ function openSizeModal() {
 // 6. PRODUCT CARD BUILDER
 // ==========================================
 function createProductCardHTML(product) {
+  const inStock = typeof isProductInStock === "function" ? isProductInStock(product) : true;
   const discountPercent = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+  const defaultSize = (product.sizes && product.sizes.length ? product.sizes[0] : 8);
+
+  // Stock Badge determination
+  let badgeLabel = product.badge;
+  let badgeClass = product.badgeType || "available";
+  if (!inStock) {
+    badgeLabel = "OUT OF STOCK";
+    badgeClass = "soldout";
+  }
 
   return `
-    <article class="product-card" data-category="${product.category}" data-id="${product.id}">
+    <article class="product-card ${!inStock ? 'out-of-stock' : ''}" data-category="${product.category}" data-id="${product.id}">
       <div class="product-card-media">
         <a href="product.html?id=${product.id}" class="product-card-link" aria-label="View ${product.name}">
-          <img id="card-img-${product.id}" src="${product.image}" alt="${product.name} - street cloud comfort clogs" loading="lazy" class="product-card-img">
+          <img id="card-img-${product.id}" src="${product.image}" alt="${product.name}" loading="lazy" class="product-card-img">
         </a>
-        ${product.badge ? `<span class="badge badge-${product.badgeColor || 'bestseller'}">${product.badge}</span>` : ""}
+        ${badgeLabel ? `<span class="badge badge-${badgeClass}">${badgeLabel}</span>` : ""}
         <span class="discount-pill">-${discountPercent}%</span>
       </div>
 
       <div class="product-card-info">
         <div class="product-card-meta-row">
           <span class="product-card-category">${product.category} DROP</span>
-          <!-- Dynamic Color Dots Preview -->
-          <div class="card-color-swatches" title="Available in 12 Colorways">
-            <span class="swatch-dot active" style="background-color: ${product.colorHex};"></span>
-            <span class="swatch-dot" style="background-color: #00F0FF;"></span>
-            <span class="swatch-dot" style="background-color: #F59E0B;"></span>
-            <span class="swatch-more">+9</span>
-          </div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">Sizes: ${product.sizes.join(", ")}</span>
         </div>
 
         <h3 class="product-card-title">
@@ -450,9 +459,15 @@ function createProductCardHTML(product) {
 
         <div class="product-card-actions">
           <a href="product.html?id=${product.id}" class="btn btn-outline btn-sm">Select Size</a>
-          <button type="button" class="btn btn-primary btn-sm quick-add-btn" onclick="addToCart(${product.id}, 'UK 8', 1, true)" title="Quick Add UK 8 to Bag">
-            + Quick Cop
-          </button>
+          ${inStock ? `
+            <button type="button" class="btn btn-primary btn-sm quick-add-btn" onclick="addToCart(${product.id}, '${defaultSize}', 1, true)" title="Quick Add Size ${defaultSize} to Bag">
+              + Quick Cop
+            </button>
+          ` : `
+            <button type="button" class="btn btn-secondary btn-sm quick-add-btn disabled" disabled title="Out of Stock">
+              Sold Out
+            </button>
+          `}
         </div>
       </div>
     </article>
@@ -486,11 +501,32 @@ function initShopPage() {
   let currentSort = "featured";
   let searchQuery = "";
 
+  // Check URL parameters (e.g. ?cat=Men or ?cat=Flip-Flops)
+  const urlParam = new URLSearchParams(window.location.search).get("cat");
+  if (urlParam) {
+    currentCategory = urlParam;
+    categoryFilters.forEach(c => {
+      if ((c.dataset.category || "").toLowerCase() === urlParam.toLowerCase()) {
+        categoryFilters.forEach(x => x.classList.remove("active"));
+        c.classList.add("active");
+      }
+    });
+  }
+
   function filterAndRender() {
     let filtered = PRODUCTS.filter(product => {
       let matchCategory = true;
       if (currentCategory !== "All") {
-        matchCategory = product.category === currentCategory || product.category === "Unisex";
+        const cat = (product.category || "").toLowerCase();
+        const gen = (product.gender || "").toLowerCase();
+        const target = currentCategory.toLowerCase();
+        if (target === "men") {
+          matchCategory = gen === "men" || gen === "unisex";
+        } else if (target === "women") {
+          matchCategory = gen === "women" || gen === "unisex";
+        } else {
+          matchCategory = cat === target;
+        }
       }
 
       let matchSearch = true;
@@ -518,8 +554,8 @@ function initShopPage() {
         <div class="empty-results-box">
           <div class="empty-icon">🔍</div>
           <h3>No styles found matching your search</h3>
-          <p>Try searching for colors like Amber, Mint, Lavender, or Matcha.</p>
-          <button class="btn btn-secondary mt-3" onclick="resetShopFilters()">Show All 12 Drops</button>
+          <p>Try searching for Clogs, Flip-Flops, Slides, or colors like White, Black, Navy, or Red.</p>
+          <button class="btn btn-secondary mt-3" onclick="resetShopFilters()">Show All ${PRODUCTS.length} Drops</button>
         </div>
       `;
     } else {
@@ -579,15 +615,26 @@ function initProductPage() {
   const productId = params.get("id") || 1;
   const product = getProductById(productId) || PRODUCTS[0];
 
-  let selectedSize = `UK ${product.sizes[0]}`;
+  let selectedSize = `${product.sizes[0] || 8}`;
   let selectedQty = 1;
+  const inStock = typeof isProductInStock === "function" ? isProductInStock(product) : true;
   const discountPercent = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
 
   document.title = `${product.name} - ₹${product.price} | NecterNest Street Footwear`;
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) {
-    metaDesc.setAttribute("content", `Buy ${product.name} at ₹${product.price}. 100% waterproof cloud-cushioned EVA foam clogs. Free delivery & 7-day easy exchange.`);
+    metaDesc.setAttribute("content", `Buy ${product.name} at ₹${product.price}. 100% waterproof cloud-cushioned EVA foam footwear. ₹100 off first order, free packing video & free delivery over ₹999.`);
   }
+
+  // Stock Badge determination
+  let badgeLabel = product.badge;
+  let badgeClass = product.badgeType || "available";
+  if (!inStock) {
+    badgeLabel = "OUT OF STOCK";
+    badgeClass = "soldout";
+  }
+
+  const galleryList = (product.gallery && product.gallery.length) ? product.gallery : [product.image];
 
   container.innerHTML = `
     <div class="breadcrumb-nav">
@@ -601,23 +648,16 @@ function initProductPage() {
       <!-- Media Gallery -->
       <div class="pdp-media-col">
         <div class="pdp-main-image-wrapper">
-          <img id="pdp-main-image" src="${product.image}" alt="${product.name} comfortable clog" class="pdp-main-img">
-          ${product.badge ? `<span class="badge badge-${product.badgeColor || 'bestseller'} pdp-badge">${product.badge}</span>` : ""}
+          <img id="pdp-main-image" src="${product.image}" alt="${product.name} comfortable footwear" class="pdp-main-img">
+          ${badgeLabel ? `<span class="badge badge-${badgeClass} pdp-badge">${badgeLabel}</span>` : ""}
           <span class="pdp-discount-pill">-${discountPercent}% OFF</span>
         </div>
         <div class="pdp-thumbnails">
-          <button class="thumb-btn active" onclick="updateMainImage('${product.image}', this)">
-            <img src="${product.image}" alt="Main View">
-          </button>
-          <button class="thumb-btn" onclick="updateMainImage('images/clog-honey-amber.svg', this)">
-            <img src="images/clog-honey-amber.svg" alt="Amber Angle">
-          </button>
-          <button class="thumb-btn" onclick="updateMainImage('images/clog-pastel-mint.svg', this)">
-            <img src="images/clog-pastel-mint.svg" alt="Mint Angle">
-          </button>
-          <button class="thumb-btn" onclick="updateMainImage('images/clog-midnight-slate.svg', this)">
-            <img src="images/clog-midnight-slate.svg" alt="Slate Angle">
-          </button>
+          ${galleryList.map((imgSrc, idx) => `
+            <button type="button" class="thumb-btn ${idx === 0 ? 'active' : ''}" onclick="updateMainImage('${imgSrc}', this)">
+              <img src="${imgSrc}" alt="${product.name} view ${idx + 1}">
+            </button>
+          `).join("")}
         </div>
       </div>
 
@@ -642,14 +682,15 @@ function initProductPage() {
             <span class="pdp-original-price">${formatCurrency(product.originalPrice)}</span>
             <span class="pdp-save-badge">Save ${formatCurrency(product.originalPrice - product.price)} (${discountPercent}%)</span>
           </div>
-          <p class="tax-shipping-note">Inclusive of all taxes. <strong>FREE Express Delivery</strong> on prepaid orders.</p>
+          <p class="tax-shipping-note">Inclusive of all taxes. <strong>FREE Express Delivery</strong> on orders over ₹${STORE_CONFIG.freeShippingThreshold}.</p>
         </div>
 
         <!-- Launch Offer Hook -->
         <div class="pdp-offer-alert">
           <span class="offer-icon">🎁</span>
           <div class="offer-text">
-            <strong>Launch Special Offer:</strong> Apply code <span class="coupon-highlight">${STORE_CONFIG.couponCode}</span> at checkout for an extra <strong>₹${STORE_CONFIG.couponDiscount} OFF</strong>!
+            <strong>100 RUPEES OFF ON FIRST ORDER:</strong> Use code <span class="badge-code">${STORE_CONFIG.couponCode}</span> at checkout!
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">📹 Live packing video sent to your WhatsApp before dispatch • 🚚 Free delivery over ₹999</div>
           </div>
         </div>
 
@@ -660,22 +701,22 @@ function initProductPage() {
           </label>
           <div style="display: flex; gap: 0.65rem; align-items: center;">
             <span style="width: 26px; height: 26px; border-radius: 50%; background-color: ${product.colorHex}; border: 2px solid var(--text-main); box-shadow: 0 0 10px ${product.colorHex};"></span>
-            <span style="font-size: 0.85rem; color: var(--text-muted);">Explore 11 other colorways in <a href="shop.html" style="color: var(--neon-cyan); text-decoration: underline;">Shop Drops</a></span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Explore all styles in <a href="shop.html" style="color: var(--neon-cyan); text-decoration: underline;">Shop Drops</a></span>
           </div>
         </div>
 
         <!-- Size Selector -->
         <div class="pdp-size-section">
           <div class="size-header">
-            <label class="size-label">Select Your Size (UK / India):</label>
+            <label class="size-label">Select Your Size:</label>
             <button type="button" class="size-guide-trigger" onclick="openSizeModal()">
               📏 Size Guide
             </button>
           </div>
           <div class="size-pills-group" id="size-options">
             ${product.sizes.map((s, idx) => `
-              <button type="button" class="size-pill ${idx === 0 ? 'active' : ''}" data-size="UK ${s}">
-                UK ${s}
+              <button type="button" class="size-pill ${idx === 0 ? 'active' : ''}" data-size="${s}">
+                ${s}
               </button>
             `).join("")}
           </div>
@@ -690,45 +731,57 @@ function initProductPage() {
             <button type="button" class="qty-btn" id="qty-plus" aria-label="Increase quantity">+</button>
           </div>
 
-          <button type="button" class="btn btn-outline pdp-add-cart-btn" id="pdp-add-cart">
-            🛒 Add to Bag
-          </button>
+          ${inStock ? `
+            <button type="button" class="btn btn-outline pdp-add-cart-btn" id="pdp-add-cart">
+              🛒 Add to Bag
+            </button>
+          ` : `
+            <button type="button" class="btn btn-outline pdp-add-cart-btn disabled" disabled>
+              ❌ Out of Stock
+            </button>
+          `}
         </div>
 
         <!-- Instant Buy Now via WhatsApp -->
-        <button type="button" class="btn btn-whatsapp-order w-100" id="pdp-buy-whatsapp">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
-          Instant Order via WhatsApp (${formatCurrency(product.price)})
-        </button>
+        ${inStock ? `
+          <button type="button" class="btn btn-whatsapp-order w-100" id="pdp-buy-whatsapp">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
+            Instant Order via WhatsApp (${formatCurrency(product.price)})
+          </button>
+        ` : `
+          <button type="button" class="btn btn-whatsapp-order w-100 disabled" disabled style="opacity: 0.6; cursor: not-allowed;">
+            ❌ Currently Out of Stock
+          </button>
+        `}
 
         <!-- Highlights & Badges -->
         <div class="pdp-badges-grid">
           <div class="feature-badge-item">
-            <span class="icon">💧</span>
+            <span class="icon">📹</span>
             <div class="text">
-              <strong>100% Waterproof</strong>
-              <small>Mud &amp; puddle proof</small>
+              <strong>Packing Video</strong>
+              <small>WhatsApp dispatch clip</small>
             </div>
           </div>
           <div class="feature-badge-item">
-            <span class="icon">☁️</span>
+            <span class="icon">🚚</span>
             <div class="text">
-              <strong>Featherlight EVA</strong>
-              <small>Under 180 grams</small>
-            </div>
-          </div>
-          <div class="feature-badge-item">
-            <span class="icon">🛡️</span>
-            <div class="text">
-              <strong>7-Day Free Swap</strong>
-              <small>Hassle-free sizing exchange</small>
+              <strong>Free Delivery</strong>
+              <small>On orders over ₹999</small>
             </div>
           </div>
           <div class="feature-badge-item">
             <span class="icon">⚡</span>
             <div class="text">
-              <strong>Fast Dispatch</strong>
-              <small>Ships within 24h</small>
+              <strong>₹100 Off</strong>
+              <small>Code: FIRSTNEST</small>
+            </div>
+          </div>
+          <div class="feature-badge-item">
+            <span class="icon">🛡️</span>
+            <div class="text">
+              <strong>7-Day Swap</strong>
+              <small>Hassle-free exchange</small>
             </div>
           </div>
         </div>
@@ -756,7 +809,8 @@ function initProductPage() {
             <div class="accordion-body">
               <p>Dispatched via Bluedart, Delhivery, or Xpressbees with real-time SMS &amp; WhatsApp tracking updates.</p>
               <ul>
-                <li><strong>Metro Cities (Mumbai, Bengaluru, Delhi, etc.):</strong> 2 to 4 business days</li>
+                <li><strong>Packing Video:</strong> A live video of your package being packed will be sent to your WhatsApp before dispatch!</li>
+                <li><strong>Metro Cities (Mumbai, Bengaluru, Delhi, Kolkata, etc.):</strong> 2 to 4 business days</li>
                 <li><strong>Rest of India:</strong> 4 to 6 business days</li>
               </ul>
             </div>
@@ -764,7 +818,7 @@ function initProductPage() {
 
           <div class="accordion-card">
             <button type="button" class="accordion-head" onclick="toggleAccordion(this)">
-              <span>Cleaning &amp; Sneaker Care</span>
+              <span>Cleaning &amp; Footwear Care</span>
               <span class="chevron">▼</span>
             </button>
             <div class="accordion-body">
@@ -819,30 +873,180 @@ function initProductPage() {
   }
 
   const addCartBtn = document.getElementById("pdp-add-cart");
-  if (addCartBtn) {
+  if (addCartBtn && inStock) {
     addCartBtn.addEventListener("click", () => {
       addToCart(product.id, selectedSize, selectedQty, true);
     });
   }
 
   const buyWhatsAppBtn = document.getElementById("pdp-buy-whatsapp");
-  if (buyWhatsAppBtn) {
+  if (buyWhatsAppBtn && inStock) {
     buyWhatsAppBtn.addEventListener("click", () => {
-      const orderMessage = `*Hi NecterNest Squad!* 👋
-I want to instantly cop this drop:
-
-👟 *Product:* ${product.name}
-📏 *Size:* ${selectedSize}
-🔢 *Quantity:* ${selectedQty}
-💰 *Total Amount:* ${formatCurrency(product.price * selectedQty)}
-
-Please confirm dispatch timeline and share UPI confirmation!`;
-
-      const whatsappUrl = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(orderMessage)}`;
-      window.open(whatsappUrl, "_blank");
+      openQuickOrderModal(product, selectedSize, selectedQty);
     });
   }
 }
+
+/**
+ * ⚡ INSTANT WHATSAPP CHECKOUT MODAL
+ * Collects Customer Details (Name, Phone, Full Address, City, Pincode)
+ * before opening WhatsApp so the business owner gets complete order information!
+ */
+function openQuickOrderModal(product, size, qty) {
+  if (!product || (typeof isProductInStock === "function" && !isProductInStock(product))) {
+    showToast("Sorry, this item is currently out of stock!", "error");
+    return;
+  }
+
+  // Retrieve saved customer details from localStorage if available
+  let savedCust = {};
+  try {
+    const raw = localStorage.getItem("necternest_customer_details");
+    if (raw) savedCust = JSON.parse(raw);
+  } catch (e) {}
+
+  const currentSize = size || (product.sizes && product.sizes.length ? product.sizes[0] : "8");
+  const currentQty = qty || 1;
+  const totalPrice = product.price * currentQty;
+  const isFreeDelivery = totalPrice >= STORE_CONFIG.freeShippingThreshold;
+
+  // Remove existing modal if any
+  const existing = document.getElementById("quick-order-modal");
+  if (existing) existing.remove();
+
+  const modalBackdrop = document.createElement("div");
+  modalBackdrop.className = "modal-backdrop active";
+  modalBackdrop.id = "quick-order-modal";
+  modalBackdrop.setAttribute("role", "dialog");
+  modalBackdrop.setAttribute("aria-modal", "true");
+
+  modalBackdrop.innerHTML = `
+    <div class="modal-dialog quick-order-dialog" style="max-width: 520px; width: 92%;">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">⚡</span>
+          <h3 class="modal-title" style="font-size: 1.25rem;">Instant WhatsApp Checkout</h3>
+        </div>
+        <button type="button" class="modal-close-btn" onclick="closeQuickOrderModal()" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 1.35rem;">
+        <!-- Product Quick Summary -->
+        <div class="quick-order-product-card" style="display: flex; gap: 0.85rem; align-items: center; background: var(--bg-surface-elevated); padding: 0.85rem; border-radius: var(--radius-lg); border: 1px solid var(--border-color); margin-bottom: 1.15rem;">
+          <img src="${product.image}" alt="${product.name}" style="width: 65px; height: 65px; object-fit: cover; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+          <div style="flex: 1;">
+            <h4 style="font-size: 0.95rem; margin-bottom: 0.25rem; color: var(--text-main); font-weight: 800; line-height: 1.2;">${product.name}</h4>
+            <div style="font-size: 0.825rem; color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 0.65rem;">
+              <span>Size: <strong style="color: var(--neon-cyan);">${currentSize}</strong></span>
+              <span>Qty: <strong>${currentQty}</strong></span>
+              <span>Total: <strong style="color: var(--cyber-amber); font-size: 0.95rem;">${formatCurrency(totalPrice)}</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trust Callout -->
+        <div style="background: rgba(0, 240, 255, 0.08); border-left: 3px solid var(--neon-cyan); padding: 0.65rem 0.85rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 0.825rem; margin-bottom: 1.15rem; color: var(--text-main);">
+          ⚡ <strong>₹100 OFF on first order</strong> with code <span class="badge-code">FIRSTNEST</span> • 📹 <strong>Live packing video</strong> sent before dispatch • 🚚 ${isFreeDelivery ? '<strong>FREE Express Delivery</strong>' : 'Free delivery over ₹999'}
+        </div>
+
+        <!-- Customer Delivery Form -->
+        <form id="quick-order-form">
+          <div class="form-group" style="margin-bottom: 0.85rem;">
+            <label for="quick-cust-name" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.35rem;">Full Name *</label>
+            <input type="text" id="quick-cust-name" class="form-control" required placeholder="e.g. Rahul Sharma" value="${savedCust.name || ''}" style="width: 100%; padding: 0.75rem 1rem; border-radius: var(--radius-md); background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); font-family: inherit;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0.85rem;">
+            <label for="quick-cust-phone" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.35rem;">WhatsApp Mobile Number *</label>
+            <input type="tel" id="quick-cust-phone" class="form-control" required pattern="[0-9]{10}" placeholder="10-digit number (e.g. 9876543210)" value="${savedCust.phone || ''}" style="width: 100%; padding: 0.75rem 1rem; border-radius: var(--radius-md); background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); font-family: inherit;">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0.85rem;">
+            <label for="quick-cust-address" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.35rem;">Delivery Address (House/Flat, Street, Area) *</label>
+            <input type="text" id="quick-cust-address" class="form-control" required placeholder="Flat/House No, Street, Landmark" value="${savedCust.address || ''}" style="width: 100%; padding: 0.75rem 1rem; border-radius: var(--radius-md); background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); font-family: inherit;">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem;">
+            <div class="form-group">
+              <label for="quick-cust-city" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.35rem;">City *</label>
+              <input type="text" id="quick-cust-city" class="form-control" required placeholder="City" value="${savedCust.city || ''}" style="width: 100%; padding: 0.75rem 1rem; border-radius: var(--radius-md); background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); font-family: inherit;">
+            </div>
+            <div class="form-group">
+              <label for="quick-cust-pincode" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.35rem;">Pincode *</label>
+              <input type="text" id="quick-cust-pincode" class="form-control" required pattern="[0-9]{6}" placeholder="6 digits" value="${savedCust.pincode || ''}" style="width: 100%; padding: 0.75rem 1rem; border-radius: var(--radius-md); background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); font-family: inherit;">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-whatsapp-order w-100 btn-lg" style="min-height: 48px; font-size: 1rem; font-weight: 800;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67Z"/></svg>
+            Send Order to WhatsApp (${formatCurrency(totalPrice)})
+          </button>
+        </form>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modalBackdrop);
+
+  // Close on backdrop click
+  modalBackdrop.addEventListener("click", (e) => {
+    if (e.target === modalBackdrop) {
+      closeQuickOrderModal();
+    }
+  });
+
+  // Form submit handler
+  const form = document.getElementById("quick-order-form");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("quick-cust-name").value.trim();
+    const phone = document.getElementById("quick-cust-phone").value.trim();
+    const address = document.getElementById("quick-cust-address").value.trim();
+    const city = document.getElementById("quick-cust-city").value.trim();
+    const pincode = document.getElementById("quick-cust-pincode").value.trim();
+
+    if (!name || !phone || !address || !city || !pincode) {
+      showToast("Please fill in all delivery details!", "error");
+      return;
+    }
+
+    if (phone.length < 10) {
+      showToast("Please enter a valid 10-digit WhatsApp number!", "error");
+      return;
+    }
+
+    // Save details for next time
+    localStorage.setItem("necternest_customer_details", JSON.stringify({ name, phone, address, city, pincode }));
+
+    // Prepare WhatsApp Message
+    const orderMessage = `🛍️ *NEW INSTANT ORDER — NECTERNEST*
+---------------------------------------
+👤 *Customer:* ${name}
+📞 *WhatsApp:* ${phone}
+📍 *Address:* ${address}
+🏙️ *City & Pincode:* ${city} - ${pincode}
+---------------------------------------
+👟 *Product:* ${product.name}
+📏 *Size:* ${currentSize}
+🔢 *Quantity:* ${currentQty}
+💰 *Total Amount:* ${formatCurrency(totalPrice)} (Inclusive of all taxes)
+📹 *Packing Video:* Yes, please share packing video before dispatch!
+🚚 *Shipping:* ${isFreeDelivery ? "FREE Express Delivery" : "Standard Delivery"}
+---------------------------------------
+Please confirm dispatch timeline and share UPI payment confirmation! Thanks squad!`;
+
+    const whatsappUrl = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(orderMessage)}`;
+    closeQuickOrderModal();
+    window.open(whatsappUrl, "_blank");
+    showToast("Opening WhatsApp with your complete order details!", "success");
+  });
+}
+
+window.closeQuickOrderModal = function() {
+  const modal = document.getElementById("quick-order-modal");
+  if (modal) modal.remove();
+};
 
 window.updateMainImage = function(src, btn) {
   const mainImg = document.getElementById("pdp-main-image");
@@ -893,6 +1097,12 @@ function initCartPage() {
     const isFreeShipping = subtotal >= STORE_CONFIG.freeShippingThreshold;
     const shippingFee = isFreeShipping ? 0 : STORE_CONFIG.standardShippingFee;
     const finalTotal = Math.max(0, subtotal - discountAmount + shippingFee);
+
+    let savedCust = {};
+    try {
+      const raw = localStorage.getItem("necternest_customer_details");
+      if (raw) savedCust = JSON.parse(raw);
+    } catch (e) {}
 
     cartContainer.innerHTML = `
       <div class="cart-layout-grid">
@@ -1007,27 +1217,27 @@ function initCartPage() {
               <form id="checkout-form" onsubmit="handleCheckoutSubmit(event)">
                 <div class="form-group">
                   <label for="cust-name">Full Name *</label>
-                  <input type="text" id="cust-name" required placeholder="e.g. Rahul Sharma">
+                  <input type="text" id="cust-name" required placeholder="e.g. Rahul Sharma" value="${savedCust.name || ''}">
                 </div>
 
                 <div class="form-group">
                   <label for="cust-phone">WhatsApp Number *</label>
-                  <input type="tel" id="cust-phone" required pattern="[0-9]{10}" placeholder="10-digit mobile (e.g. 9876543210)">
+                  <input type="tel" id="cust-phone" required pattern="[0-9]{10}" placeholder="10-digit mobile (e.g. 9876543210)" value="${savedCust.phone || ''}">
                 </div>
 
                 <div class="form-group">
                   <label for="cust-address">Delivery Address (House/Flat, Street, Area) *</label>
-                  <textarea id="cust-address" required rows="2" placeholder="Full house address for courier delivery"></textarea>
+                  <textarea id="cust-address" required rows="2" placeholder="Full house address for courier delivery">${savedCust.address || ''}</textarea>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group col">
                     <label for="cust-city">City *</label>
-                    <input type="text" id="cust-city" required placeholder="e.g. Bengaluru">
+                    <input type="text" id="cust-city" required placeholder="e.g. Bengaluru" value="${savedCust.city || ''}">
                   </div>
                   <div class="form-group col">
                     <label for="cust-pincode">Pincode *</label>
-                    <input type="text" id="cust-pincode" required pattern="[0-9]{6}" placeholder="6-digit pincode">
+                    <input type="text" id="cust-pincode" required pattern="[0-9]{6}" placeholder="6-digit pincode" value="${savedCust.pincode || ''}">
                   </div>
                 </div>
 
@@ -1118,6 +1328,9 @@ window.handleCheckoutSubmit = function(event) {
   const city = document.getElementById("cust-city").value.trim();
   const pincode = document.getElementById("cust-pincode").value.trim();
 
+  // Save customer details for next orders
+  localStorage.setItem("necternest_customer_details", JSON.stringify({ name, phone, address, city, pincode }));
+
   const subtotal = getCartSubtotal();
   const isCouponApplied = localStorage.getItem(COUPON_STORAGE_KEY) === "true";
   const discountAmount = isCouponApplied ? STORE_CONFIG.couponDiscount : 0;
@@ -1142,6 +1355,7 @@ ${itemsText}
 💰 *Subtotal:* ${formatCurrency(subtotal)}
 ${isCouponApplied ? `🎁 *Coupon (${STORE_CONFIG.couponCode}):* -₹${STORE_CONFIG.couponDiscount}\n` : ""}🚚 *Shipping:* ${isFreeShipping ? "FREE" : formatCurrency(shippingFee)}
 💵 *TOTAL AMOUNT:* ${formatCurrency(finalTotal)}
+📹 *Packing Video:* Yes, please share packing video before dispatch!
 ---------------------------------------
 📲 *Payment Option:* UPI (${STORE_CONFIG.upiId})
 Please confirm my order and share dispatch timeline! Thanks squad!`;
