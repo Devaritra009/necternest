@@ -478,11 +478,89 @@ function createProductCardHTML(product) {
 // 7. HOME PAGE (index.html)
 // ==========================================
 function initHomePage() {
-  const featuredContainer = document.getElementById("featured-products-grid");
-  if (!featuredContainer || typeof PRODUCTS === "undefined") return;
+  if (typeof PRODUCTS === "undefined" || !PRODUCTS.length) return;
 
-  const featured = PRODUCTS.slice(0, 6);
-  featuredContainer.innerHTML = featured.map(createProductCardHTML).join("");
+  // 1. Dynamic Hero Section Product Card & Price Tag
+  const heroCard = document.querySelector(".hero-card-preview");
+  if (heroCard) {
+    const heroProduct = PRODUCTS[0]; // Active hero drop (Product 1)
+    if (heroProduct) {
+      // Dynamic Floating Badge
+      const badgeEl = heroCard.querySelector(".hero-badge-float");
+      if (badgeEl) {
+        if (!heroProduct.inStock) {
+          badgeEl.textContent = "OUT OF STOCK";
+          badgeEl.style.backgroundColor = "rgba(239, 68, 68, 0.9)";
+          badgeEl.style.borderColor = "var(--danger)";
+        } else {
+          const badgeText = heroProduct.badge || "NOW AVAILABLE";
+          badgeEl.textContent = badgeText.startsWith("⚡") ? badgeText : `⚡ ${badgeText}`;
+          badgeEl.style.backgroundColor = "";
+          badgeEl.style.borderColor = "";
+        }
+      }
+
+      // Dynamic Product Image
+      const imgEl = heroCard.querySelector(".hero-img");
+      if (imgEl) {
+        imgEl.src = heroProduct.image;
+        imgEl.alt = heroProduct.name;
+      }
+
+      // Dynamic Product Title
+      const titleEl = heroCard.querySelector("h3");
+      if (titleEl) {
+        titleEl.textContent = heroProduct.name;
+      }
+
+      // Dynamic Drop Price & MRP Tag
+      const priceP = heroCard.querySelector(".hero-card-footer p");
+      if (priceP) {
+        priceP.innerHTML = `Drop Price: <strong style="color: var(--primary); font-size: 1.15rem;">₹${heroProduct.price.toLocaleString("en-IN")}</strong> <del style="color: var(--text-light);">₹${heroProduct.originalPrice.toLocaleString("en-IN")}</del>`;
+      }
+
+      // Dynamic CTA Button
+      const btnEl = heroCard.querySelector(".hero-card-footer a.btn");
+      if (btnEl) {
+        btnEl.href = `product.html?id=${heroProduct.id}`;
+        if (!heroProduct.inStock) {
+          btnEl.textContent = "Currently Sold Out";
+          btnEl.classList.add("btn-disabled");
+          btnEl.style.opacity = "0.6";
+          btnEl.style.pointerEvents = "none";
+        } else {
+          btnEl.textContent = "Cop This Style →";
+          btnEl.classList.remove("btn-disabled");
+          btnEl.style.opacity = "";
+          btnEl.style.pointerEvents = "";
+        }
+      }
+    }
+  }
+
+  // 2. Dynamic Price Range in Hero CTA Button
+  const heroCtaLink = document.querySelector(".hero-cta-group a.btn-primary");
+  if (heroCtaLink) {
+    const validPrices = PRODUCTS.map(p => p.price).filter(p => typeof p === "number" && !isNaN(p));
+    if (validPrices.length) {
+      const minPrice = Math.min(...validPrices);
+      const maxPrice = Math.max(...validPrices);
+      heroCtaLink.textContent = `Explore All Drops (₹${minPrice} - ₹${maxPrice}) →`;
+    }
+  }
+
+  // 3. Dynamic "View All Drops" Counter Link
+  const viewAllLink = document.querySelector(".section-header .view-all-link");
+  if (viewAllLink) {
+    viewAllLink.textContent = `View All ${PRODUCTS.length} Drops →`;
+  }
+
+  // 4. Featured Bestsellers Grid (top 6 drops)
+  const featuredContainer = document.getElementById("featured-products-grid");
+  if (featuredContainer) {
+    const featured = PRODUCTS.slice(0, 6);
+    featuredContainer.innerHTML = featured.map(createProductCardHTML).join("");
+  }
 }
 
 // ==========================================

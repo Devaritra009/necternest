@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Oxanium:ital,wght@0,600;0,700;0,800;0,900;1,700;1,800;1,900&display=swap');
+
 /* ==========================================================================
    NECTERNEST — CLOUD STREET COMFORT FOOTWEAR
    Theme: Modern Tech-Streetwear with Dynamic Dark & White Mode Toggle
@@ -414,27 +416,33 @@ p {
 }
 
 .brand-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.35rem;
+  font-family: 'Oxanium', 'Outfit', sans-serif;
+  font-style: italic;
+  font-size: 1.42rem;
   font-weight: 900;
-  color: var(--text-main);
-  letter-spacing: -0.5px;
+  color: #F8FAFC;
+  letter-spacing: -0.01em;
   line-height: 1;
+  text-transform: uppercase;
+  text-shadow: 0 2px 10px rgba(255, 255, 255, 0.15);
 }
 
 .brand-title .brand-highlight {
-  color: var(--primary);
-  text-shadow: 0 0 14px var(--primary-glow);
+  color: #F59E0B;
+  background: linear-gradient(135deg, #FFFBEB 0%, #F59E0B 45%, #D97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.4));
 }
 
 .brand-sub {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.52rem;
+  font-family: 'Oxanium', 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.54rem;
   font-weight: 800;
-  color: var(--neon-cyan);
-  letter-spacing: 2px;
+  color: #F59E0B;
+  letter-spacing: 2.8px;
   text-transform: uppercase;
-  margin-top: 2px;
+  margin-top: 3px;
   line-height: 1;
 }
 
@@ -445,14 +453,19 @@ p {
 
 [data-theme="light"] .brand-title {
   color: #0F172A;
+  text-shadow: none;
 }
 
 [data-theme="light"] .brand-title .brand-highlight {
-  color: var(--primary);
+  color: #D97706;
+  background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: none;
 }
 
 [data-theme="light"] .brand-sub {
-  color: var(--neon-cyan);
+  color: #D97706;
 }
 
 [data-theme="light"] .brand-logo .brand-text-logo {
