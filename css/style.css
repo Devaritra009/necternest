@@ -369,13 +369,21 @@ p {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
   background-color: var(--header-bg);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--border-color);
   height: var(--header-height);
   transition: all var(--transition-fast);
+}
+
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .header-inner {
@@ -615,6 +623,18 @@ p {
   transition: all var(--transition-fast);
 }
 
+.hamburger-btn.active span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger-btn.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-btn.active span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
 /* Mobile Nav Drawer */
 @media (max-width: 860px) {
   .hamburger-btn {
@@ -640,7 +660,7 @@ p {
     gap: 1.35rem;
     box-shadow: var(--shadow-lg);
     transition: transform var(--transition-smooth), visibility var(--transition-smooth);
-    z-index: 1000;
+    z-index: 1001;
   }
 
   .nav-links.active {
