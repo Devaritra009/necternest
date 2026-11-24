@@ -140,6 +140,8 @@ html {
   font-size: 16px;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 body {
@@ -148,11 +150,13 @@ body {
   background-color: var(--bg-page);
   line-height: 1.6;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
   background-image: var(--ambient-bg);
-  background-attachment: fixed;
+  background-attachment: scroll;
   transition: background-color var(--transition-normal), color var(--transition-normal);
 }
 
@@ -620,9 +624,14 @@ p {
   .nav-links {
     position: fixed;
     top: var(--header-height);
-    right: -100%;
-    width: 295px;
+    right: 0;
+    transform: translateX(100%);
+    visibility: hidden;
+    pointer-events: none;
+    width: min(295px, 85vw);
     height: calc(100vh - var(--header-height));
+    height: calc(100dvh - var(--header-height));
+    overflow-y: auto;
     background-color: var(--bg-surface);
     border-left: 1px solid var(--border-color);
     flex-direction: column;
@@ -630,12 +639,14 @@ p {
     padding: 2.25rem 1.75rem;
     gap: 1.35rem;
     box-shadow: var(--shadow-lg);
-    transition: right var(--transition-smooth);
+    transition: transform var(--transition-smooth), visibility var(--transition-smooth);
     z-index: 1000;
   }
 
   .nav-links.active {
-    right: 0;
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
   }
 
   .nav-link {
@@ -649,8 +660,9 @@ p {
     position: fixed;
     top: var(--header-height);
     left: 0;
-    width: 100vw;
+    width: 100%;
     height: calc(100vh - var(--header-height));
+    height: calc(100dvh - var(--header-height));
     background-color: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(8px);
     opacity: 0;
@@ -666,9 +678,19 @@ p {
 }
 
 @media (max-width: 520px) {
+  .announcement-bar {
+    font-size: 0.72rem;
+    line-height: 1.4;
+    padding: 0.5rem 0.75rem;
+  }
+
   .site-header .container.header-inner {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    padding-left: 0.65rem;
+    padding-right: 0.65rem;
+  }
+
+  .brand-logo {
+    gap: 0.45rem;
   }
 
   .brand-logo img {
@@ -676,34 +698,79 @@ p {
   }
 
   .brand-crest {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
   }
 
   .brand-title {
-    font-size: 1.15rem;
+    font-size: 1.05rem;
   }
 
   .brand-sub {
-    font-size: 0.44rem;
-    letter-spacing: 1.4px;
+    font-size: 0.42rem;
+    letter-spacing: 1px;
   }
 
   .header-actions {
-    gap: 0.4rem;
+    gap: 0.35rem;
   }
 
   .theme-toggle-btn {
     min-height: 44px;
     height: 44px;
-    padding: 0 0.55rem;
-    font-size: 0.78rem;
+    padding: 0 0.45rem;
+    font-size: 0.72rem;
   }
 
   .cart-icon-btn, .hamburger-btn {
     min-width: 44px;
     min-height: 44px;
     flex-shrink: 0;
+  }
+
+  .hero-section {
+    padding: 2.5rem 0 3.25rem;
+  }
+
+  .hero-pill {
+    font-size: 0.72rem;
+    padding: 0.4rem 0.85rem;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-cta-group .btn-lg {
+    width: 100%;
+    padding: 0.9rem 1.25rem;
+    font-size: 0.95rem;
+    white-space: normal;
+  }
+
+  .whatsapp-float {
+    bottom: 16px;
+    right: 16px;
+    width: 52px;
+    height: 52px;
+  }
+
+  .toast-container {
+    left: 16px;
+    right: 16px;
+    bottom: 78px;
+    align-items: center;
+  }
+
+  .toast {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .form-row {
+    flex-direction: column;
   }
 }
 
@@ -914,17 +981,17 @@ p {
   text-decoration: underline;
 }
 
-/* Products Grid */
+/* Products Grid (Mobile-First: 1 column on narrow Android phones, 2 on wider phones/tablets, 3 on desktop) */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.15rem;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
 }
 
-@media (min-width: 640px) {
+@media (min-width: 520px) {
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
+    gap: 1.35rem;
   }
 }
 
@@ -2296,8 +2363,9 @@ p {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
+  height: 100dvh;
   background-color: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
   display: flex;
@@ -2322,6 +2390,7 @@ p {
   width: 100%;
   max-width: 650px;
   max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
   box-shadow: var(--shadow-lg), 0 0 35px var(--neon-cyan-glow);
   transform: scale(0.95);
