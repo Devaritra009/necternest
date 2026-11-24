@@ -58,20 +58,16 @@ function updateThemeToggleButtons(theme) {
 // ==========================================
 const STORE_CONFIG = {
   brandName: "NecterNest",
-  whatsappNumber: "919876543210", 
+  whatsappNumber: "919432314662",
   upiId: "necternest@upi",
   supportEmail: "necternestofficial@gmail.com",
-  freeShippingThreshold: 999,
-  standardShippingFee: 49,
-  couponCode: "FIRSTNEST",
-  couponDiscount: 100
+  firstOrderDiscount: 100
 };
 
 // ==========================================
 // 1. CART MANAGEMENT (localStorage)
 // ==========================================
 const CART_STORAGE_KEY = "necternest_cart_v1";
-const COUPON_STORAGE_KEY = "necternest_coupon_applied";
 
 function getCart() {
   try {
@@ -157,7 +153,6 @@ function removeCartItem(index) {
 
 function clearCart() {
   localStorage.removeItem(CART_STORAGE_KEY);
-  localStorage.removeItem(COUPON_STORAGE_KEY);
   updateCartBadge();
 }
 
@@ -596,15 +591,8 @@ function initShopPage() {
       let matchCategory = true;
       if (currentCategory !== "All") {
         const cat = (product.category || "").toLowerCase();
-        const gen = (product.gender || "").toLowerCase();
         const target = currentCategory.toLowerCase();
-        if (target === "men") {
-          matchCategory = gen === "men" || gen === "unisex";
-        } else if (target === "women") {
-          matchCategory = gen === "women" || gen === "unisex";
-        } else {
-          matchCategory = cat === target;
-        }
+        matchCategory = cat === target;
       }
 
       let matchSearch = true;
@@ -760,15 +748,15 @@ function initProductPage() {
             <span class="pdp-original-price">${formatCurrency(product.originalPrice)}</span>
             <span class="pdp-save-badge">Save ${formatCurrency(product.originalPrice - product.price)} (${discountPercent}%)</span>
           </div>
-          <p class="tax-shipping-note">Inclusive of all taxes. <strong>FREE Express Delivery</strong> on orders over ₹${STORE_CONFIG.freeShippingThreshold}.</p>
+          <p class="tax-shipping-note">Inclusive of all taxes. <strong>Delivery charges</strong> will be calculated after receiving your order on WhatsApp.</p>
         </div>
 
         <!-- Launch Offer Hook -->
         <div class="pdp-offer-alert">
           <span class="offer-icon">🎁</span>
           <div class="offer-text">
-            <strong>100 RUPEES OFF ON FIRST ORDER:</strong> Use code <span class="badge-code">${STORE_CONFIG.couponCode}</span> at checkout!
-            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">📹 Live packing video sent to your WhatsApp before dispatch • 🚚 Free delivery over ₹999</div>
+            <strong>FLAT ₹100 OFF FOR NEW CUSTOMERS:</strong> Applicable on your first order (no code needed)!
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem;">📹 Live packing video sent to your WhatsApp before dispatch • 🚚 Delivery charges calculated after order</div>
           </div>
         </div>
 
@@ -844,15 +832,15 @@ function initProductPage() {
           <div class="feature-badge-item">
             <span class="icon">🚚</span>
             <div class="text">
-              <strong>Free Delivery</strong>
-              <small>On orders over ₹999</small>
+              <strong>Pan-India Delivery</strong>
+              <small>Charges shared on WhatsApp</small>
             </div>
           </div>
           <div class="feature-badge-item">
             <span class="icon">⚡</span>
             <div class="text">
-              <strong>₹100 Off</strong>
-              <small>Code: FIRSTNEST</small>
+              <strong>Flat ₹100 Off</strong>
+              <small>For new customers</small>
             </div>
           </div>
           <div class="feature-badge-item">
@@ -986,7 +974,6 @@ function openQuickOrderModal(product, size, qty) {
   const currentSize = size || (product.sizes && product.sizes.length ? product.sizes[0] : "8");
   const currentQty = qty || 1;
   const totalPrice = product.price * currentQty;
-  const isFreeDelivery = totalPrice >= STORE_CONFIG.freeShippingThreshold;
 
   // Remove existing modal if any
   const existing = document.getElementById("quick-order-modal");
@@ -1023,8 +1010,13 @@ function openQuickOrderModal(product, size, qty) {
         </div>
 
         <!-- Trust Callout -->
-        <div style="background: rgba(0, 240, 255, 0.08); border-left: 3px solid var(--neon-cyan); padding: 0.65rem 0.85rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 0.825rem; margin-bottom: 1.15rem; color: var(--text-main);">
-          ⚡ <strong>₹100 OFF on first order</strong> with code <span class="badge-code">FIRSTNEST</span> • 📹 <strong>Live packing video</strong> sent before dispatch • 🚚 ${isFreeDelivery ? '<strong>FREE Express Delivery</strong>' : 'Free delivery over ₹999'}
+        <div style="background: rgba(0, 240, 255, 0.08); border-left: 3px solid var(--neon-cyan); padding: 0.65rem 0.85rem; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; font-size: 0.825rem; margin-bottom: 0.85rem; color: var(--text-main);">
+          ⚡ <strong>Flat ₹100 OFF for new customers</strong> on their first order • 📹 <strong>Live packing video</strong> sent before dispatch
+        </div>
+
+        <!-- Payment & Delivery Notice -->
+        <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.35); padding: 0.7rem 0.85rem; border-radius: var(--radius-md); font-size: 0.82rem; margin-bottom: 1.15rem; color: var(--text-main); line-height: 1.45;">
+          <strong>Note:</strong> Please attach your <strong>payment copy/screenshot</strong> in the WhatsApp chat to confirm your order. <strong>Delivery charges</strong> will be calculated after receiving your order message.
         </div>
 
         <!-- Customer Delivery Form -->
@@ -1036,7 +1028,7 @@ function openQuickOrderModal(product, size, qty) {
 
           <div class="form-group" style="margin-bottom: 0.85rem;">
             <label for="quick-cust-phone" style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.35rem;">WhatsApp Mobile Number *</label>
-            <input type="tel" id="quick-cust-phone" class="form-control" required pattern="[0-9]{10}" placeholder="10-digit number (e.g. 9876543210)" value="${savedCust.phone || ''}" style="width: 100%; padding: 0.75rem 1rem; border-radius: var(--radius-md); background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); font-family: inherit;">
+            <input type="tel" id="quick-cust-phone" class="form-control" required pattern="[0-9]{10}" placeholder="10-digit number (e.g. 9432314662)" value="${savedCust.phone || ''}" style="width: 100%; padding: 0.75rem 1rem; border-radius: var(--radius-md); background: var(--bg-surface); border: 1px solid var(--border-color); color: var(--text-main); font-family: inherit;">
           </div>
 
           <div class="form-group" style="margin-bottom: 0.85rem;">
@@ -1097,22 +1089,25 @@ function openQuickOrderModal(product, size, qty) {
     // Save details for next time
     localStorage.setItem("necternest_customer_details", JSON.stringify({ name, phone, address, city, pincode }));
 
-    // Prepare WhatsApp Message
-    const orderMessage = `🛍️ *NEW INSTANT ORDER — NECTERNEST*
----------------------------------------
-👤 *Customer:* ${name}
-📞 *WhatsApp:* ${phone}
-📍 *Address:* ${address}
-🏙️ *City & Pincode:* ${city} - ${pincode}
----------------------------------------
-👟 *Product:* ${product.name}
-📏 *Size:* ${currentSize}
-🔢 *Quantity:* ${currentQty}
-💰 *Total Amount:* ${formatCurrency(totalPrice)} (Inclusive of all taxes)
-📹 *Packing Video:* Yes, please share packing video before dispatch!
-🚚 *Shipping:* ${isFreeDelivery ? "FREE Express Delivery" : "Standard Delivery"}
----------------------------------------
-Please confirm dispatch timeline and share UPI payment confirmation! Thanks squad!`;
+    // Prepare clean, uncorrupted WhatsApp Message
+    const orderMessage = [
+      `*NEW INSTANT ORDER - NECTERNEST*`,
+      `---------------------------------------`,
+      `*Customer:* ${name}`,
+      `*WhatsApp:* ${phone}`,
+      `*Address:* ${address}`,
+      `*City & Pincode:* ${city} - ${pincode}`,
+      `---------------------------------------`,
+      `*Product:* ${product.name}`,
+      `*Size:* ${currentSize}`,
+      `*Quantity:* ${currentQty}`,
+      `*Items Total:* Rs. ${totalPrice.toLocaleString("en-IN")}`,
+      `*New Customer Offer:* Flat Rs. 100 Off (on 1st order)`,
+      `*Delivery Charges:* To be calculated after receiving order`,
+      `*Packing Video:* Yes, please share packing video before dispatch`,
+      `---------------------------------------`,
+      `*Note:* I will attach my payment copy/screenshot in this WhatsApp chat to confirm the order.`
+    ].join("\n");
 
     const whatsappUrl = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(orderMessage)}`;
     closeQuickOrderModal();
@@ -1170,11 +1165,7 @@ function initCartPage() {
     }
 
     const subtotal = getCartSubtotal();
-    const isCouponApplied = localStorage.getItem(COUPON_STORAGE_KEY) === "true";
-    const discountAmount = isCouponApplied ? STORE_CONFIG.couponDiscount : 0;
-    const isFreeShipping = subtotal >= STORE_CONFIG.freeShippingThreshold;
-    const shippingFee = isFreeShipping ? 0 : STORE_CONFIG.standardShippingFee;
-    const finalTotal = Math.max(0, subtotal - discountAmount + shippingFee);
+    const finalTotal = subtotal;
 
     let savedCust = {};
     try {
@@ -1191,20 +1182,11 @@ function initCartPage() {
             <button type="button" class="btn-text-danger" onclick="confirmClearCart()">Clear All</button>
           </div>
 
-          <!-- Free Shipping Progress -->
+          <!-- New Customer & Delivery Info Banner -->
           <div class="shipping-progress-box">
-            ${isFreeShipping ? `
-              <div class="shipping-unlocked">
-                <span>🎉</span> <strong>Congrats! You unlocked FREE Express Delivery!</strong>
-              </div>
-            ` : `
-              <div class="shipping-locked">
-                Add <strong>${formatCurrency(STORE_CONFIG.freeShippingThreshold - subtotal)}</strong> more to get <strong>FREE Express Delivery</strong>!
-              </div>
-              <div class="progress-bar-bg">
-                <div class="progress-bar-fill" style="width: ${Math.min(100, (subtotal / STORE_CONFIG.freeShippingThreshold) * 100)}%;"></div>
-              </div>
-            `}
+            <div class="shipping-unlocked">
+              <span>⚡</span> <strong>Flat ₹100 Off for New Customers</strong> on their first order • 🚚 Delivery charges calculated on WhatsApp after order!
+            </div>
           </div>
 
           <!-- Items List -->
@@ -1250,39 +1232,25 @@ function initCartPage() {
           <div class="summary-card">
             <h3>Order Summary</h3>
             
-            <!-- Coupon Box -->
-            <div class="coupon-box">
-              <label for="coupon-input">Have a Promo Code?</label>
-              <div class="coupon-input-group">
-                <input type="text" id="coupon-input" placeholder="e.g. ${STORE_CONFIG.couponCode}" value="${isCouponApplied ? STORE_CONFIG.couponCode : ''}" ${isCouponApplied ? 'readonly' : ''}>
-                ${isCouponApplied ? `
-                  <button type="button" class="btn btn-secondary btn-sm" onclick="removeCoupon()">Remove</button>
-                ` : `
-                  <button type="button" class="btn btn-primary btn-sm" onclick="applyCoupon()">Apply</button>
-                `}
-              </div>
-              <small class="coupon-hint">Use code <strong>${STORE_CONFIG.couponCode}</strong> for ₹100 off launch discount!</small>
+            <!-- New Customer Offer Notice (No Coupon Code Needed) -->
+            <div class="coupon-box" style="background: rgba(0, 240, 255, 0.06); border: 1px solid rgba(0, 240, 255, 0.25); border-radius: var(--radius-md); padding: 0.85rem 1rem; margin-bottom: 1.25rem;">
+              <strong style="color: var(--neon-cyan); font-size: 0.9rem;">⚡ New Customer Offer: Flat ₹100 Off</strong>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin: 0.25rem 0 0;">First-time customers get flat ₹100 off on their first order — no coupon code needed! Verified on WhatsApp.</p>
             </div>
 
             <!-- Price Breakdown -->
             <div class="summary-breakdown">
               <div class="summary-line">
-                <span>Subtotal</span>
+                <span>Items Subtotal</span>
                 <span>${formatCurrency(subtotal)}</span>
               </div>
-              ${isCouponApplied ? `
-                <div class="summary-line discount-line">
-                  <span>Launch Discount (${STORE_CONFIG.couponCode})</span>
-                  <span>-₹${STORE_CONFIG.couponDiscount}</span>
-                </div>
-              ` : ""}
               <div class="summary-line">
-                <span>Shipping</span>
-                <span>${isFreeShipping ? '<strong class="text-success">FREE</strong>' : formatCurrency(shippingFee)}</span>
+                <span>Delivery Charges</span>
+                <span style="color: var(--primary); font-weight: 700; font-size: 0.85rem;">Calculated after order</span>
               </div>
               <hr class="summary-divider">
               <div class="summary-line total-line">
-                <span>Total Amount</span>
+                <span>Items Total</span>
                 <span>${formatCurrency(finalTotal)}</span>
               </div>
             </div>
@@ -1300,7 +1268,7 @@ function initCartPage() {
 
                 <div class="form-group">
                   <label for="cust-phone">WhatsApp Number *</label>
-                  <input type="tel" id="cust-phone" required pattern="[0-9]{10}" placeholder="10-digit mobile (e.g. 9876543210)" value="${savedCust.phone || ''}">
+                  <input type="tel" id="cust-phone" required pattern="[0-9]{10}" placeholder="10-digit mobile (e.g. 9432314662)" value="${savedCust.phone || ''}">
                 </div>
 
                 <div class="form-group">
@@ -1311,7 +1279,7 @@ function initCartPage() {
                 <div class="form-row">
                   <div class="form-group col">
                     <label for="cust-city">City *</label>
-                    <input type="text" id="cust-city" required placeholder="e.g. Bengaluru" value="${savedCust.city || ''}">
+                    <input type="text" id="cust-city" required placeholder="e.g. South 24 Parganas / Kolkata" value="${savedCust.city || ''}">
                   </div>
                   <div class="form-group col">
                     <label for="cust-pincode">Pincode *</label>
@@ -1336,6 +1304,12 @@ function initCartPage() {
                     <img src="images/qr-code.svg" alt="NecterNest UPI QR Code" class="upi-qr-img">
                     <small>Scan and pay with any UPI app</small>
                   </div>
+
+                  <div style="margin-top: 0.85rem; padding: 0.7rem 0.85rem; border-radius: var(--radius-md); background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); font-size: 0.82rem; color: var(--text-main); text-align: left; line-height: 1.45;">
+                    <strong>Important Checkout Note:</strong><br>
+                    1. Please attach your <strong>payment copy/screenshot</strong> in the WhatsApp chat to confirm your order.<br>
+                    2. <strong>Delivery charges</strong> will be calculated after receiving your order message.
+                  </div>
                 </div>
 
                 <!-- Submit WhatsApp Order Button -->
@@ -1354,26 +1328,6 @@ function initCartPage() {
   window.renderCartPage = renderCart;
   renderCart();
 }
-
-window.applyCoupon = function() {
-  const input = document.getElementById("coupon-input");
-  if (!input) return;
-  const val = input.value.trim().toUpperCase();
-
-  if (val === STORE_CONFIG.couponCode) {
-    localStorage.setItem(COUPON_STORAGE_KEY, "true");
-    showToast(`Coupon applied! You saved ₹${STORE_CONFIG.couponDiscount}`, "success");
-    if (typeof window.renderCartPage === "function") window.renderCartPage();
-  } else {
-    showToast(`Invalid coupon! Try '${STORE_CONFIG.couponCode}'`, "error");
-  }
-};
-
-window.removeCoupon = function() {
-  localStorage.removeItem(COUPON_STORAGE_KEY);
-  showToast("Coupon removed", "info");
-  if (typeof window.renderCartPage === "function") window.renderCartPage();
-};
 
 window.confirmClearCart = function() {
   if (confirm("Are you sure you want to empty your shopping bag?")) {
@@ -1410,33 +1364,30 @@ window.handleCheckoutSubmit = function(event) {
   localStorage.setItem("necternest_customer_details", JSON.stringify({ name, phone, address, city, pincode }));
 
   const subtotal = getCartSubtotal();
-  const isCouponApplied = localStorage.getItem(COUPON_STORAGE_KEY) === "true";
-  const discountAmount = isCouponApplied ? STORE_CONFIG.couponDiscount : 0;
-  const isFreeShipping = subtotal >= STORE_CONFIG.freeShippingThreshold;
-  const shippingFee = isFreeShipping ? 0 : STORE_CONFIG.standardShippingFee;
-  const finalTotal = Math.max(0, subtotal - discountAmount + shippingFee);
 
-  const itemsText = cart.map((item, i) => 
-    `${i + 1}. *${item.name}* (Size: ${item.size}) x ${item.quantity} = ${formatCurrency(item.price * item.quantity)}`
+  const itemsText = cart.map((item, i) =>
+    `${i + 1}. *${item.name}* (Size: ${item.size}) x ${item.quantity} = Rs. ${(item.price * item.quantity).toLocaleString("en-IN")}`
   ).join("\n");
 
-  const message = `🛍️ *NEW STREET DROP ORDER - NECTERNEST*
----------------------------------------
-👤 *Customer:* ${name}
-📞 *Phone:* ${phone}
-📍 *Address:* ${address}, ${city} - ${pincode}
-
-📦 *ITEMS ORDERED:*
-${itemsText}
-
----------------------------------------
-💰 *Subtotal:* ${formatCurrency(subtotal)}
-${isCouponApplied ? `🎁 *Coupon (${STORE_CONFIG.couponCode}):* -₹${STORE_CONFIG.couponDiscount}\n` : ""}🚚 *Shipping:* ${isFreeShipping ? "FREE" : formatCurrency(shippingFee)}
-💵 *TOTAL AMOUNT:* ${formatCurrency(finalTotal)}
-📹 *Packing Video:* Yes, please share packing video before dispatch!
----------------------------------------
-📲 *Payment Option:* UPI (${STORE_CONFIG.upiId})
-Please confirm my order and share dispatch timeline! Thanks squad!`;
+  const message = [
+    `*NEW ORDER - NECTERNEST*`,
+    `---------------------------------------`,
+    `*Customer:* ${name}`,
+    `*Phone:* ${phone}`,
+    `*Address:* ${address}, ${city} - ${pincode}`,
+    ``,
+    `*ITEMS ORDERED:*`,
+    itemsText,
+    ``,
+    `---------------------------------------`,
+    `*Items Subtotal:* Rs. ${subtotal.toLocaleString("en-IN")}`,
+    `*New Customer Offer:* Flat Rs. 100 Off (on 1st order)`,
+    `*Delivery Charges:* To be calculated after receiving order`,
+    `*Packing Video:* Yes, please share packing video before dispatch`,
+    `---------------------------------------`,
+    `*Payment Option:* UPI (${STORE_CONFIG.upiId})`,
+    `*Note:* I will attach my payment copy/screenshot in this WhatsApp chat to confirm my order.`
+  ].join("\n");
 
   const whatsappUrl = `https://wa.me/${STORE_CONFIG.whatsappNumber}?text=${encodeURIComponent(message)}`;
   window.open(whatsappUrl, "_blank");
